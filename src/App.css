@@ -1,0 +1,109 @@
+@import "tailwindcss";
+
+.pagina {
+    @apply min-h-screen bg-[#212529] text-white px-8 py-10;
+}
+
+.titulo {
+    @apply text-2xl font-medium text-white mb-8;
+}
+
+.card {
+    @apply bg-[#2c3034] border border-white/10 rounded-xl p-6 mb-10;
+}
+
+.card-titulo {
+    @apply text-base font-medium text-white mb-5;
+}
+
+.form {
+    @apply flex flex-col gap-4;
+}
+
+.form-grid {
+    @apply grid grid-cols-2 gap-4;
+}
+
+.input {
+    @apply bg-[#343a40] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#378ADD] transition-colors;
+}
+
+.textarea {
+    @apply bg-[#343a40] border border-white/10 rounded-lg px-4 py-2.5 text-sm text-white placeholder-white/30 focus:outline-none focus:border-[#378ADD] transition-colors resize-none;
+}
+
+.botoes {
+    @apply flex gap-3;
+}
+
+.botao-primario {
+    @apply bg-[#378ADD] hover:bg-[#2d6fb5] text-white text-sm font-medium px-6 py-2.5 rounded-lg transition-colors cursor-pointer;
+}
+
+.botao-secundario {
+    @apply border border-white/20 hover:border-white/40 text-white/70 hover:text-white text-sm px-6 py-2.5 rounded-lg transition-colors cursor-pointer;
+}
+
+.lista-titulo {
+    @apply text-base font-medium text-white mb-4;
+}
+
+.lista-vazia {
+    @apply text-white/40 text-sm;
+}
+
+.lista {
+    @apply flex flex-col gap-3;
+}
+
+.obra-card {
+    @apply bg-[#2c3034] border border-white/10 rounded-xl px-6 py-4 flex items-center justify-between;
+}
+
+.obra-info {
+    @apply flex flex-col gap-1;
+}
+
+.obra-nome {
+    @apply text-white font-medium text-sm;
+}
+
+.obra-detalhe {
+    @apply text-white/50 text-xs;
+}
+
+.obra-descricao {
+    @apply text-white/40 text-xs;
+}
+
+.obra-acoes {
+    @apply flex items-center gap-4;
+}
+
+.badge-andamento {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-blue-500/15 text-blue-400;
+}
+
+.badge-concluida {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-green-500/15 text-green-400;
+}
+
+.badge-pausada {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400;
+}
+
+.botao-editar {
+    @apply text-xs text-[#378ADD] hover:text-[#2d6fb5] transition-colors cursor-pointer;
+}
+
+.botao-excluir {
+    @apply text-xs text-red-400 hover:text-red-300 transition-colors cursor-pointer;
+}
+
+.input option[value=""] {
+    @apply text-white/30;
+}
+
+.input:has(option[value=""]:checked) {
+    @apply text-white/30;
+}

@@ -3,7 +3,7 @@ export interface Obra
     id?: number
     nome: string
     endereco: string
-    cliente: string
+    clienteResponsavel: string
     status: string
-    dataCriacao: string
+    descricao: string
 }
