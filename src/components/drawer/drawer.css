@@ -1,0 +1,53 @@
+@reference "../../App.css";
+
+.drawer {
+    @apply fixed top-0 left-0 h-screen w-56 bg-[#2c3034] border-r border-white/10 flex flex-col;
+}
+
+.drawer-logo {
+    @apply px-6 py-5 border-b border-white/10;
+}
+
+.drawer-logo-texto {
+    @apply text-white font-medium text-sm;
+}
+
+.drawer-nav {
+    @apply flex flex-col gap-1 p-3 flex-1;
+}
+
+.drawer-link {
+    @apply w-full text-left px-4 py-2.5 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 transition-colors cursor-pointer;
+}
+
+.drawer-link-ativo {
+    @apply bg-[#378ADD]/15 text-[#378ADD];
+}
+
+.drawer-footer {
+    @apply p-4 border-t border-white/10 flex flex-col gap-3;
+}
+
+.drawer-usuario {
+    @apply flex items-center gap-3;
+}
+
+.drawer-avatar {
+    @apply w-8 h-8 rounded-full bg-[#B5D4F4] flex items-center justify-center text-xs font-medium text-[#0C447C] flex-shrink-0;
+}
+
+.drawer-usuario-info {
+    @apply flex flex-col;
+}
+
+.drawer-usuario-nome {
+    @apply text-sm text-white font-medium;
+}
+
+.drawer-usuario-perfil {
+    @apply text-xs text-white/40;
+}
+
+.drawer-sair {
+    @apply w-full text-left px-4 py-2.5 rounded-lg text-sm text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-colors cursor-pointer;
+}
