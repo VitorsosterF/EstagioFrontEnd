@@ -1,4 +1,4 @@
-import "./Login.css"
+import "./login.css"
 
 interface LoginProps
 {
@@ -41,7 +41,7 @@ function Login({ onLogin }: LoginProps)
                         <label className="login-label">Senha</label>
                         <input
                             type="password"
-                            placeholder="••••••••"
+                            placeholder="senha"
                             className="input"
                         />
                     </div>

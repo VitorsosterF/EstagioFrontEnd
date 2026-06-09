@@ -1,29 +1,19 @@
 import { useState } from "react"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+
 import Drawer from "./components/drawer/drawer"
 import Login from "./pages/login/login"
 import Obras from "./pages/obras/obras"
 import Usuarios from "./pages/usuarios/usuarios"
 import "./App.css"
 
-function App()
+function Layout() 
 {
-    const [logado, setLogado] = useState(false)
     const [paginaAtiva, setPaginaAtiva] = useState("obras")
-
-    function handleLogin()
-    {
-        setLogado(true)
-    }
 
     function handleSair()
     {
-        setLogado(false)
-        setPaginaAtiva("obras")
-    }
-
-    if (!logado)
-    {
-        return <Login onLogin={handleLogin} />
+        window.location.href = "/login"
     }
 
     return (
@@ -33,12 +23,44 @@ function App()
                 setPaginaAtiva={setPaginaAtiva}
                 onSair={handleSair}
             />
-
             <main className="app-conteudo">
-                {paginaAtiva === "obras" && <Obras />}
-                {paginaAtiva === "usuarios" && <div>Página de usuários em breve</div>}
+                <Routes>
+                    <Route path="/obras" element={<Obras />} />
+                    <Route path="/usuarios" element={<Usuarios />} />
+                    <Route path="*" element={<Navigate replace to="/obras" />} />
+                </Routes>
             </main>
         </div>
+    )
+}
+
+function App()
+{
+    const [logado, setLogado] = useState(false)
+
+    function handleLogin()
+    {
+        setLogado(true)
+    }
+
+    if (!logado)
+    {
+        return <Login onLogin={handleLogin} />
+    }
+
+    return (
+        <BrowserRouter>
+            <Routes>
+                <Route
+                    path="/login"
+                    element={logado ? <Navigate to="/obras" /> : <Login onLogin={handleLogin} />}
+                />
+                <Route
+                    path="/*"
+                    element={logado ? <Layout /> : <Navigate to="/login" />}
+                />
+            </Routes>
+        </BrowserRouter>
     )
 }
 

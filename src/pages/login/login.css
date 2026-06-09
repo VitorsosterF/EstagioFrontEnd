@@ -49,9 +49,13 @@
 }
 
 .login-botao {
-    @apply w-full justify-center;
+    @apply w-full justify-center bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 rounded-lg transition-colors;
 }
 
 .login-footer {
     @apply text-white/20 text-xs mt-6;
+}
+
+.input {
+    @apply bg-[#212529] border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-[#ffffff] focus:border-transparent;
 }

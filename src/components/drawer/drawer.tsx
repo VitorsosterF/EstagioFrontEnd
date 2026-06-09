@@ -1,3 +1,6 @@
+import "./drawer.css";
+import { useNavigate, useLocation } from "react-router-dom";
+
 interface DrawerProps
 {
     paginaAtiva: string
@@ -7,6 +10,9 @@ interface DrawerProps
 
 function Drawer({ paginaAtiva, setPaginaAtiva, onSair }: DrawerProps)
 {
+    const navigate = useNavigate()
+    const location = useLocation()
+
     return (
         <div className="drawer">
 
@@ -16,15 +22,15 @@ function Drawer({ paginaAtiva, setPaginaAtiva, onSair }: DrawerProps)
 
             <nav className="drawer-nav">
                 <button
-                    className={`drawer-link ${paginaAtiva === "obras" ? "drawer-link-ativo" : ""}`}
-                    onClick={() => setPaginaAtiva("obras")}
+                    className={`drawer-link ${location.pathname === "/obras" ? "drawer-link-ativo" : ""}`}
+                    onClick={() => navigate("/obras")}
                 >
                     Obras
                 </button>
 
                 <button
-                    className={`drawer-link ${paginaAtiva === "usuarios" ? "drawer-link-ativo" : ""}`}
-                    onClick={() => setPaginaAtiva("usuarios")}
+                    className={`drawer-link ${location.pathname === "/usuarios" ? "drawer-link-ativo" : ""}`}
+                    onClick={() => navigate("/usuarios")}
                 >
                     Usuários
                 </button>

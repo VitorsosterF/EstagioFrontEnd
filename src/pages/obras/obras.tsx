@@ -126,7 +126,18 @@ function Obras()
                         value={form.descricao}
                         onChange={e => setForm({ ...form, descricao: e.target.value })}
                         rows={3}
-                        className="textarea"
+                        className="obras-textarea"
+                        style={{
+                            backgroundColor: "#212529",
+                            border: "0.5px solid rgba(255,255,255,0.1)",
+                            borderRadius: "8px",
+                            padding: "10px 12px",
+                            fontSize: "14px",
+                            color: "white",
+                            width: "100%",
+                            resize: "none",
+                            outline: "none",   
+                        }}
                     />
 
                     <div className="botoes">

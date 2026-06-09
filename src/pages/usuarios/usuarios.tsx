@@ -68,7 +68,6 @@ function Usuarios()
     function getBadgeClass(perfil: string)
     {
         if (perfil === "Admin") return "badge-admin"
-        if (perfil === "Gestor") return "badge-gestor"
         return "badge-cliente"
     }
 
@@ -126,7 +125,6 @@ function Usuarios()
                         >
                             <option value="" disabled>Selecionar perfil</option>
                             <option value="Admin">Admin</option>
-                            <option value="Gestor">Gestor</option>
                             <option value="Cliente">Cliente</option>
                         </select>
                     </div>

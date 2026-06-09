@@ -1,4 +1,4 @@
-@reference "../../App.css";
+@import "../../App.css";
 
 .pagina {
     @apply px-8 py-10;
@@ -79,3 +79,4 @@
 .botao-excluir {
     @apply text-xs text-red-400 hover:text-red-300 transition-colors cursor-pointer;
 }
+    
