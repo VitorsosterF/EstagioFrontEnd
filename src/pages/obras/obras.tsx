@@ -27,36 +27,39 @@ function Obras()
         carregarObras()
     }, [])
 
-    async function handleSubmit(e: React.FormEvent)
+    async function handleSubmit(e: React.FormEvent) 
     {
         e.preventDefault()
-
-        if (edicaoId)
+        try 
         {
-            await api.put(`/obras/${edicaoId}`, form)
-            setEdicaoId(null)
+            if (edicaoId) 
+                {
+                await api.put(`/obras/${edicaoId}`, form)
+                setEdicaoId(null)
+            } else 
+            {
+                await api.post("/obras", form)
+            }
+
+            setForm({ nome: "", endereco: "", clienteResponsavel: "", status: "", descricao: "" })
+            carregarObras()
+        } catch (error) 
+        {
+            alert("Erro ao salvar obra. Verifique os dados e tente novamente.")
         }
-        else
-        {
-            await api.post("/obras", form)
-        }
-
-        setForm(
-        {
-            nome: "",
-            endereco: "",
-            clienteResponsavel: "",
-            status: "",
-            descricao: ""
-        })
-
-        carregarObras()
     }
 
-    async function handleDelete(id: number)
+    async function handleDelete(id: number) 
     {
-        await api.delete(`/obras/${id}`)
-        carregarObras()
+        if (!confirm("Deseja excluir esta obra?")) return
+        try 
+        {
+            await api.delete(`/obras/${id}`)
+            carregarObras()
+        } catch (error) 
+        {
+            alert("Erro ao excluir obra.")
+        }
     }
 
     async function handleEdit(obra: Obra)
