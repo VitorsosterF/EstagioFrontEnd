@@ -6,13 +6,19 @@ import Obras from "./pages/obras/obras"
 import Usuarios from "./pages/usuarios/usuarios"
 import ObraDetalhe from "./pages/obraDetalhes/obraDetalhes"
 import "./App.css"
+import { removerToken } from "./services/auth"
 
-function Layout()
+interface LayoutProps {
+    nomeUsuario: string
+}
+
+function Layout({ nomeUsuario }: LayoutProps)
 {
     const [paginaAtiva, setPaginaAtiva] = useState("obras")
 
     function handleSair()
     {
+        removerToken()
         window.location.href = "/login"
     }
 
@@ -22,6 +28,7 @@ function Layout()
                 paginaAtiva={paginaAtiva}
                 setPaginaAtiva={setPaginaAtiva}
                 onSair={handleSair}
+                nomeUsuario={nomeUsuario}
             />
             <main className="app-conteudo">
                 <Routes>
@@ -38,9 +45,11 @@ function Layout()
 function App()
 {
     const [logado, setLogado] = useState(false)
+    const [nomeUsuario, setNomeUsuario] = useState("")
 
-    function handleLogin()
+    function handleLogin(nome: string)
     {
+        setNomeUsuario(nome)
         setLogado(true)
     }
 
@@ -62,7 +71,7 @@ function App()
                 />
                 <Route
                     path="/*"
-                    element={logado ? <Layout /> : <Navigate to="/login" />}
+                    element={logado ? <Layout nomeUsuario={nomeUsuario} /> : <Navigate to="/login" />}
                 />
             </Routes>
         </BrowserRouter>

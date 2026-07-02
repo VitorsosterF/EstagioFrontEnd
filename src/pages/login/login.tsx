@@ -4,7 +4,7 @@ import { login, salvarToken } from "../../services/auth"
 
 interface LoginProps
 {
-    onLogin: () => void
+    onLogin: (nome: string) => void
 }
 
 function Login({ onLogin }: LoginProps)
@@ -14,20 +14,25 @@ function Login({ onLogin }: LoginProps)
     const [erro, setErro] = useState("")
     const [carregando, setCarregando] = useState(false)
 
-    async function handleLogin() {
-        if (!email || !senha) {
+    async function handleLogin() 
+    {
+        if (!email || !senha) 
+        {
             setErro("Preencha e-mail e senha.")
             return
         }
         setCarregando(true)
         setErro("")
-        try {
-            const token = await login(email, senha)
+        try 
+        {
+            const { token, nomeCompleto } = await login(email, senha)
             salvarToken(token)
-            onLogin()
-        } catch {
-            setErro("E-mail ou senha inválidos.")
-        } finally {
+            onLogin(nomeCompleto)
+        } catch 
+        {
+        setErro("E-mail ou senha inválidos.")
+        } finally 
+        {
             setCarregando(false)
         }
     }
@@ -77,7 +82,9 @@ function Login({ onLogin }: LoginProps)
                         />
                     </div>
 
-                    <a className="login-esqueci">Esqueci minha senha</a>
+                    {erro && <p style={{ color: "#ff6b6b", fontSize: "13px" }}>{erro}</p>}
+
+                    {/* <a className="login-esqueci">Esqueci minha senha</a> */}
 
                     <button 
                         className="botao-primario login-botao" 
@@ -90,7 +97,7 @@ function Login({ onLogin }: LoginProps)
 
             </div>
 
-            <p className="login-footer">ConstruGestor © 2026 · v1.0.0</p>
+            {/* <p className="login-footer">ConstruGestor © 2026 · v1.0.0</p> */}
 
         </div>
     )

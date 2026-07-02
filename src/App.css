@@ -150,3 +150,11 @@
     @apply grid gap-4 mt-4;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }
+
+.detalhe-header {
+    @apply flex items-center justify-between mb-1;
+}
+
+.detalhe-acoes {
+    @apply flex gap-4;
+}

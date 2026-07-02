@@ -5,7 +5,7 @@ import Modal from "../../components/modal/modal"
 import "./Obras.css"
 import { useNavigate } from "react-router-dom"
 
-const formVazio: Obra = { nome: "", endereco: "", clienteResponsavel: "", status: "", descricao: "" }
+const formVazio: Obra = { nome: "", rua: "", numero: "", complemento: "", clienteResponsavel: "", status: "", descricao: "" }
 
 function Obras()
 {
@@ -118,18 +118,6 @@ function Obras()
         }
     }
 
-    async function handleEdit(obra: Obra)
-    {
-        setForm(obra)
-        setEdicaoId(obra.id!)
-    }
-
-    function getBadgeClass(status: string)
-    {
-        if (status === "Em andamento") return "badge-andamento"
-        if (status === "Concluída") return "badge-concluida"
-        return "badge-pausada"
-    }
 
     return (
         <div className="pagina">
@@ -146,7 +134,9 @@ function Obras()
                 <form onSubmit={handleSubmit} className="form">
                     <div className="form-grid">
                         <input placeholder="Nome da obra" value={form.nome} onChange={e => setForm({ ...form, nome: e.target.value })} required className="input" />
-                        <input placeholder="Endereço" value={form.endereco} onChange={e => setForm({ ...form, endereco: e.target.value })} required className="input" />
+                        <input placeholder="Rua" value={form.rua} onChange={e => setForm({ ...form, rua: e.target.value })} required className="input" />
+                        <input placeholder="Número" value={form.numero} onChange={e => setForm({ ...form, numero: e.target.value })} required className="input" />
+                        <input placeholder="Complemento" value={form.complemento} onChange={e => setForm({ ...form, complemento: e.target.value })} className="input" />
                         <select
                             value={form.clienteResponsavel}
                             onChange={e => setForm({ ...form, clienteResponsavel: e.target.value })}

@@ -6,9 +6,10 @@ interface DrawerProps
     paginaAtiva: string
     setPaginaAtiva: (pagina: string) => void
     onSair: () => void
+    nomeUsuario: string
 }
 
-function Drawer({ paginaAtiva, setPaginaAtiva, onSair }: DrawerProps)
+function Drawer({ paginaAtiva, setPaginaAtiva, onSair, nomeUsuario}: DrawerProps)
 {
     const navigate = useNavigate()
     const location = useLocation()
@@ -38,10 +39,11 @@ function Drawer({ paginaAtiva, setPaginaAtiva, onSair }: DrawerProps)
 
             <div className="drawer-footer">
                 <div className="drawer-usuario">
-                    <div className="drawer-avatar">AD</div>
+                    <div className="drawer-avatar">
+                         {nomeUsuario.split(" ").map(n => n[0]).slice(0, 2).join("").toUpperCase()}
+                    </div>
                     <div className="drawer-usuario-info">
-                        <span className="drawer-usuario-nome">Administrador</span>
-                        <span className="drawer-usuario-perfil">Admin</span>
+                        <span className="drawer-usuario-nome">{nomeUsuario}</span>
                     </div>
                 </div>
 

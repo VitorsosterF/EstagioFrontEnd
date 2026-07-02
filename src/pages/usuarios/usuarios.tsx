@@ -142,7 +142,7 @@ function Usuarios()
                         </select>
                     </div>
                     <div className="botoes">
-                        <button type="submit" className="botao-primario">
+                        <button type="submit" className="botao-primario" onClick={fecharModal}>
                             {edicaoId ? "Salvar alterações" : "Salvar usuário"}
                         </button>
                         <button type="button" className="botao-secundario" onClick={fecharModal}>
