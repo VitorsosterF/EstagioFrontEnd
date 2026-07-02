@@ -4,6 +4,7 @@ import type { Usuario } from "../../types/usuarios"
 import Modal from "../../components/modal/modal"
 import "./Usuarios.css"
 
+
 const formVazio: Usuario = { nome: "", sobrenome: "", email: "", senha: "", perfil: "" }
 
 function Usuarios()

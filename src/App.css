@@ -3,11 +3,145 @@
 .app-container {
     @apply flex min-h-screen bg-[#212529];
 }
-
 .app-conteudo {
     @apply ml-56 flex-1 min-h-screen;
 }
-
 .botao-primario {
-    @apply w-full max-w-xs justify-center bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 rounded-lg transition-colors;
+    @apply bg-cyan-600 hover:bg-cyan-700 text-white font-medium py-2 px-4 rounded-lg transition-colors cursor-pointer;
+}
+.botao-secundario {
+    @apply bg-transparent border border-white/20 hover:border-white/40 text-white/70 hover:text-white font-medium py-2 px-4 rounded-lg transition-colors cursor-pointer;
+}
+.input {
+    @apply bg-[#212529] border border-white/10 rounded-lg px-4 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-white focus:border-transparent w-full;
+}
+.pagina {
+    @apply px-8 py-10;
+}
+.pagina-header {
+    @apply flex items-center justify-between mb-6;
+}
+.titulo {
+    @apply text-2xl font-medium text-white mb-8;
+}
+.lista-titulo {
+    @apply text-base font-medium text-white mb-4 mt-4;
+}
+.lista-vazia {
+    @apply text-white/40 text-sm;
+}
+.lista {
+    @apply flex flex-col gap-3;
+}
+.form {
+    @apply flex flex-col gap-4;
+}
+.form-grid {
+    @apply grid grid-cols-2 gap-4;
+}
+.botoes {
+    @apply flex gap-3;
+}
+.obra-card {
+    @apply bg-[#2c3034] border border-white/10 rounded-xl px-6 py-4 flex items-center justify-between;
+}
+.obra-info {
+    @apply flex flex-col gap-1;
+}
+.obra-nome {
+    @apply text-white font-medium text-sm;
+}
+.obra-detalhe {
+    @apply text-white/50 text-xs;
+}
+.obra-descricao {
+    @apply text-white/40 text-xs;
+}
+.obra-acoes {
+    @apply flex items-center gap-4;
+}
+.badge-andamento {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-blue-500/15 text-blue-400;
+}
+.badge-concluida {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-green-500/15 text-green-400;
+}
+.badge-pausada {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400;
+}
+.badge-admin {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-blue-500/15 text-blue-400;
+}
+.badge-cliente {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400;
+}
+.botao-editar {
+    @apply text-xs text-[#378ADD] hover:text-[#2d6fb5] transition-colors cursor-pointer bg-transparent border-none;
+}
+.botao-excluir {
+    @apply text-xs text-red-400 hover:text-red-300 transition-colors cursor-pointer bg-transparent border-none;
+}
+.obras-grid {
+    @apply grid gap-4 mt-4;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+.obra-card-novo {
+    @apply bg-[#2c3034] border border-white/10 rounded-xl overflow-hidden cursor-pointer transition-transform duration-200 hover:-translate-y-1 hover:border-white/25;
+}
+.obra-card-imagem {
+    @apply w-full h-36 overflow-hidden bg-[#1a1d20];
+}
+.obra-card-imagem img {
+    @apply w-full h-full object-cover;
+}
+.obra-card-sem-imagem {
+    @apply w-full h-full flex items-center justify-center text-4xl text-white/20;
+}
+.obra-card-rodape {
+    @apply p-3 flex items-center justify-between gap-2;
+}
+.obra-card-nome {
+    @apply text-white text-sm font-medium truncate;
+}
+.obra-card-acoes {
+    @apply flex gap-1 flex-shrink-0;
+}
+.upload-area {
+    @apply flex flex-col items-start gap-2;
+}
+.upload-preview {
+    @apply w-full h-40 object-cover rounded-lg border border-white/10;
+}
+.upload-label {
+    @apply text-[#378ADD] text-xs cursor-pointer px-3 py-1.5 border border-[#378ADD] rounded-md transition-colors hover:bg-[#378ADD]/10;
+}
+.botao-voltar {
+    @apply bg-transparent border-none text-[#378ADD] text-sm cursor-pointer p-0 mb-6 inline-block hover:underline;
+}
+.detalhe-container {
+    @apply flex gap-8 items-start;
+}
+.detalhe-imagem {
+    @apply w-[360px] h-[260px] flex-shrink-0 rounded-xl overflow-hidden bg-[#1a1d20] border border-white/10;
+}
+.detalhe-imagem img {
+    @apply w-full h-full object-cover;
+}
+.detalhe-sem-imagem {
+    @apply w-full h-full flex items-center justify-center text-5xl text-white/20;
+}
+.detalhe-info {
+    @apply flex-1 flex flex-col gap-4;
+}
+.detalhe-nome {
+    @apply text-white text-[22px] font-semibold mb-1;
+}
+.detalhe-campo {
+    @apply flex flex-col gap-1;
+}
+.detalhe-label {
+    @apply text-white/40 text-xs uppercase tracking-wide;
+}
+.detalhe-valor {
+    @apply text-white text-sm;
 }

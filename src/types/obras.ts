@@ -6,4 +6,5 @@ export interface Obra {
     status: string
     descricao: string
     criadoEm?: string
+    imagemUrl?: string
 }

@@ -1,20 +1,2 @@
-@reference "../../App.css";
+@import "../../App.css";
 
-.badge-admin {
-    @apply text-xs font-medium px-3 py-1 rounded-full bg-blue-500/15 text-blue-400;
-}
-
-.badge-gestor {
-    @apply text-xs font-medium px-3 py-1 rounded-full bg-green-500/15 text-green-400;
-}
-
-.badge-cliente {
-    @apply text-xs font-medium px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400;
-}
-
-.pagina-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 24px;
-}

@@ -3,6 +3,7 @@ import { api } from "../../services/api"
 import type { Obra } from "../../types/obras"
 import Modal from "../../components/modal/modal"
 import "./Obras.css"
+import { useNavigate } from "react-router-dom"
 
 const formVazio: Obra = { nome: "", endereco: "", clienteResponsavel: "", status: "", descricao: "" }
 
@@ -12,6 +13,9 @@ function Obras()
     const [edicaoId, setEdicaoId] = useState<number | null>(null)
     const [modalAberto, setModalAberto] = useState(false)
     const [form, setForm] = useState<Obra>(formVazio)
+    const [imagem, setImagem] = useState<File | null>(null)
+    const [preview, setPreview] = useState<string | null>(null)
+    const navigate = useNavigate()
 
     async function carregarObras()
     {
@@ -28,20 +32,37 @@ function Obras()
     {
         setForm(formVazio)
         setEdicaoId(null)
+        setImagem(null)
+        setPreview(null)
         setModalAberto(true)
     }
 
-    function abrirModalEdicao(obra: Obra)
+    function abrirModalEdicao(obra: Obra, e: React.MouseEvent)
     {
         setForm(obra)
         setEdicaoId(obra.id!)
+        setImagem(null)
+        setPreview(obra.imagemUrl ? `http://localhost:8080${obra.imagemUrl}` : null)
         setModalAberto(true)
     }
+
     function fecharModal()
     {
         setModalAberto(false)
         setEdicaoId(null)
+        setImagem(null)
+        setPreview(null)
         setForm(formVazio)
+    }
+
+    function handleImagemChange(e: React.ChangeEvent<HTMLInputElement>)
+    {
+        const arquivo = e.target.files?.[0]
+        if (arquivo)
+        {
+            setImagem(arquivo)
+            setPreview(URL.createObjectURL(arquivo))
+        }
     }
 
 
@@ -50,15 +71,22 @@ function Obras()
         e.preventDefault()
         try 
         {
-            if (edicaoId) 
-                {
-                await api.put(`/obras/${edicaoId}`, form)
-                setEdicaoId(null)
-            } else 
-            {
-                await api.post("/obras", form)
-            }
+            const formData = new FormData()
+            formData.append("obra", JSON.stringify(form))
+            if (imagem) formData.append("imagem", imagem)
 
+            if (edicaoId)
+            {
+                await api.put(`/obras/${edicaoId}`, formData, {
+                    headers: { "Content-Type": "multipart/form-data" }
+                })
+            }
+            else
+            {
+                await api.post("/obras", formData, {
+                    headers: { "Content-Type": "multipart/form-data" }
+                })
+            }
             fecharModal()
             carregarObras()
         } catch (error) 
@@ -67,14 +95,16 @@ function Obras()
         }
     }
 
-    async function handleDelete(id: number) 
+    async function handleDelete(id: number, e: React.MouseEvent) 
     {
+        e.stopPropagation()
         if (!confirm("Deseja excluir esta obra?")) return
-        try 
+        try
         {
             await api.delete(`/obras/${id}`)
             carregarObras()
-        } catch (error) 
+        }
+        catch
         {
             alert("Erro ao excluir obra.")
         }
@@ -97,9 +127,7 @@ function Obras()
         <div className="pagina">
             <div className="pagina-header">
                 <h1 className="titulo">Gerenciamento de Obras</h1>
-                <button className="botao-primario" onClick={abrirModalCriacao}>
-                    + Nova obra
-                </button>
+                <button className="botao-primario" onClick={abrirModalCriacao}>+ Nova obra</button>
             </div>
 
             <Modal
@@ -109,33 +137,10 @@ function Obras()
             >
                 <form onSubmit={handleSubmit} className="form">
                     <div className="form-grid">
-                        <input
-                            placeholder="Nome da obra"
-                            value={form.nome}
-                            onChange={e => setForm({ ...form, nome: e.target.value })}
-                            required
-                            className="input"
-                        />
-                        <input
-                            placeholder="Endereço"
-                            value={form.endereco}
-                            onChange={e => setForm({ ...form, endereco: e.target.value })}
-                            required
-                            className="input"
-                        />
-                        <input
-                            placeholder="Cliente responsável"
-                            value={form.clienteResponsavel}
-                            onChange={e => setForm({ ...form, clienteResponsavel: e.target.value })}
-                            required
-                            className="input"
-                        />
-                        <select
-                            value={form.status}
-                            onChange={e => setForm({ ...form, status: e.target.value })}
-                            required
-                            className="input"
-                        >
+                        <input placeholder="Nome da obra" value={form.nome} onChange={e => setForm({ ...form, nome: e.target.value })} required className="input" />
+                        <input placeholder="Endereço" value={form.endereco} onChange={e => setForm({ ...form, endereco: e.target.value })} required className="input" />
+                        <input placeholder="Cliente responsável" value={form.clienteResponsavel} onChange={e => setForm({ ...form, clienteResponsavel: e.target.value })} required className="input" />
+                        <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} required className="input">
                             <option value="" disabled>Selecionar status</option>
                             <option value="Em andamento">Em andamento</option>
                             <option value="Concluída">Concluída</option>
@@ -148,49 +153,42 @@ function Obras()
                         onChange={e => setForm({ ...form, descricao: e.target.value })}
                         rows={3}
                         className="obras-textarea"
-                        style={{
-                            backgroundColor: "#212529",
-                            border: "0.5px solid rgba(255,255,255,0.1)",
-                            borderRadius: "8px",
-                            padding: "10px 12px",
-                            fontSize: "14px",
-                            color: "white",
-                            width: "100%",
-                            resize: "none",
-                            outline: "none",
-                        }}
+                        style={{ backgroundColor: "#212529", border: "0.5px solid rgba(255,255,255,0.1)", borderRadius: "8px", padding: "10px 12px", fontSize: "14px", color: "white", width: "100%", resize: "none", outline: "none" }}
                     />
+
+                    <div className="upload-area">
+                        {preview && <img src={preview} alt="preview" className="upload-preview" />}
+                        <label className="upload-label">
+                            {preview ? "Trocar imagem" : "Adicionar imagem"}
+                            <input type="file" accept="image/*" onChange={handleImagemChange} style={{ display: "none" }} />
+                        </label>
+                    </div>
+
                     <div className="botoes">
-                        <button type="submit" className="botao-primario">
-                            {edicaoId ? "Salvar alterações" : "Cadastrar obra"}
-                        </button>
-                        <button type="button" className="botao-secundario" onClick={fecharModal}>
-                            Cancelar
-                        </button>
+                        <button type="submit" className="botao-primario">{edicaoId ? "Salvar alterações" : "Cadastrar obra"}</button>
+                        <button type="button" className="botao-secundario" onClick={fecharModal}>Cancelar</button>
                     </div>
                 </form>
             </Modal>
 
-            <h2 className="lista-titulo">Obras cadastradas</h2>
-
             {obras.length === 0 ? (
                 <p className="lista-vazia">Nenhuma obra cadastrada ainda.</p>
             ) : (
-                <div className="lista">
+                <div className="obras-grid">
                     {obras.map(obra => (
-                        <div key={obra.id} className="obra-card">
-                            <div className="obra-info">
-                                <span className="obra-nome">{obra.nome}</span>
-                                <span className="obra-detalhe">{obra.endereco}</span>
-                                <span className="obra-detalhe">{obra.clienteResponsavel}</span>
-                                {obra.descricao && (
-                                    <span className="obra-descricao">{obra.descricao}</span>
-                                )}
+                        <div key={obra.id} className="obra-card-novo" onClick={() => navigate(`/obras/${obra.id}`)}>
+                            <div className="obra-card-imagem">
+                                {obra.imagemUrl
+                                    ? <img src={`http://localhost:8080${obra.imagemUrl}`} alt={obra.nome} />
+                                    : <div className="obra-card-sem-imagem">📷</div>
+                                }
                             </div>
-                            <div className="obra-acoes">
-                                <span className={getBadgeClass(obra.status)}>{obra.status}</span>
-                                <button onClick={() => abrirModalEdicao(obra)} className="botao-editar">Editar</button>
-                                <button onClick={() => handleDelete(obra.id!)} className="botao-excluir">Excluir</button>
+                            <div className="obra-card-rodape">
+                                <span className="obra-card-nome">{obra.nome}</span>
+                                <div className="obra-card-acoes">
+                                    <button onClick={(e) => abrirModalEdicao(obra, e)} className="botao-editar">Editar</button>
+                                    <button onClick={(e) => handleDelete(obra.id!, e)} className="botao-excluir">Excluir</button>
+                                </div>
                             </div>
                         </div>
                     ))}

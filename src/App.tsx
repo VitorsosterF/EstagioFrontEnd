@@ -1,13 +1,13 @@
 import { useState } from "react"
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
-
 import Drawer from "./components/drawer/drawer"
 import Login from "./pages/login/login"
 import Obras from "./pages/obras/obras"
 import Usuarios from "./pages/usuarios/usuarios"
+import ObraDetalhe from "./pages/obraDetalhes/obraDetalhes"
 import "./App.css"
 
-function Layout() 
+function Layout()
 {
     const [paginaAtiva, setPaginaAtiva] = useState("obras")
 
@@ -26,6 +26,7 @@ function Layout()
             <main className="app-conteudo">
                 <Routes>
                     <Route path="/obras" element={<Obras />} />
+                    <Route path="/obras/:id" element={<ObraDetalhe />} />
                     <Route path="/usuarios" element={<Usuarios />} />
                     <Route path="*" element={<Navigate replace to="/obras" />} />
                 </Routes>
@@ -45,7 +46,11 @@ function App()
 
     if (!logado)
     {
-        return <Login onLogin={handleLogin} />
+        return (
+            <BrowserRouter>
+                <Login onLogin={handleLogin} />
+            </BrowserRouter>
+        )
     }
 
     return (
