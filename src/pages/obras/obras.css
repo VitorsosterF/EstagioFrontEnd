@@ -25,7 +25,7 @@
 }
 
 .lista-titulo {
-    @apply text-base font-medium text-white mb-4;
+    @apply text-base font-medium text-white mb-4 mt-4;
 }
 
 .lista-vazia {
@@ -80,3 +80,9 @@
     @apply text-xs text-red-400 hover:text-red-300 transition-colors cursor-pointer;
 }
     
+.pagina-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}

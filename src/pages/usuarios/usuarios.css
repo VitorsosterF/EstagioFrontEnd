@@ -11,3 +11,10 @@
 .badge-cliente {
     @apply text-xs font-medium px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400;
 }
+
+.pagina-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}

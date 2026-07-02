@@ -1,20 +1,17 @@
 import { useEffect, useState } from "react"
 import { api } from "../../services/api"
 import type { Obra } from "../../types/obras"
+import Modal from "../../components/modal/modal"
 import "./Obras.css"
+
+const formVazio: Obra = { nome: "", endereco: "", clienteResponsavel: "", status: "", descricao: "" }
 
 function Obras()
 {
     const [obras, setObras] = useState<Obra[]>([])
     const [edicaoId, setEdicaoId] = useState<number | null>(null)
-    const [form, setForm] = useState<Obra>(
-    {
-        nome: "",
-        endereco: "",
-        clienteResponsavel: "",
-        status: "",
-        descricao: ""
-    })
+    const [modalAberto, setModalAberto] = useState(false)
+    const [form, setForm] = useState<Obra>(formVazio)
 
     async function carregarObras()
     {
@@ -26,6 +23,27 @@ function Obras()
     {
         carregarObras()
     }, [])
+
+    function abrirModalCriacao()
+    {
+        setForm(formVazio)
+        setEdicaoId(null)
+        setModalAberto(true)
+    }
+
+    function abrirModalEdicao(obra: Obra)
+    {
+        setForm(obra)
+        setEdicaoId(obra.id!)
+        setModalAberto(true)
+    }
+    function fecharModal()
+    {
+        setModalAberto(false)
+        setEdicaoId(null)
+        setForm(formVazio)
+    }
+
 
     async function handleSubmit(e: React.FormEvent) 
     {
@@ -41,7 +59,7 @@ function Obras()
                 await api.post("/obras", form)
             }
 
-            setForm({ nome: "", endereco: "", clienteResponsavel: "", status: "", descricao: "" })
+            fecharModal()
             carregarObras()
         } catch (error) 
         {
@@ -77,14 +95,18 @@ function Obras()
 
     return (
         <div className="pagina">
+            <div className="pagina-header">
+                <h1 className="titulo">Gerenciamento de Obras</h1>
+                <button className="botao-primario" onClick={abrirModalCriacao}>
+                    + Nova obra
+                </button>
+            </div>
 
-            <h1 className="titulo">Gerenciamento de Obras</h1>
-
-            <div className="card">
-                <h2 className="card-titulo">
-                    {edicaoId ? "Editar obra" : "Nova obra"}
-                </h2>
-
+            <Modal
+                aberto={modalAberto}
+                titulo={edicaoId ? "Editar obra" : "Nova obra"}
+                onFechar={fecharModal}
+            >
                 <form onSubmit={handleSubmit} className="form">
                     <div className="form-grid">
                         <input
@@ -94,7 +116,6 @@ function Obras()
                             required
                             className="input"
                         />
-
                         <input
                             placeholder="Endereço"
                             value={form.endereco}
@@ -102,7 +123,6 @@ function Obras()
                             required
                             className="input"
                         />
-
                         <input
                             placeholder="Cliente responsável"
                             value={form.clienteResponsavel}
@@ -110,7 +130,6 @@ function Obras()
                             required
                             className="input"
                         />
-
                         <select
                             value={form.status}
                             onChange={e => setForm({ ...form, status: e.target.value })}
@@ -123,7 +142,6 @@ function Obras()
                             <option value="Pausada">Pausada</option>
                         </select>
                     </div>
-
                     <textarea
                         placeholder="Descrição"
                         value={form.descricao}
@@ -139,31 +157,19 @@ function Obras()
                             color: "white",
                             width: "100%",
                             resize: "none",
-                            outline: "none",   
+                            outline: "none",
                         }}
                     />
-
                     <div className="botoes">
                         <button type="submit" className="botao-primario">
                             {edicaoId ? "Salvar alterações" : "Cadastrar obra"}
                         </button>
-
-                        {edicaoId && (
-                            <button
-                                type="button"
-                                className="botao-secundario"
-                                onClick={() =>
-                                {
-                                    setEdicaoId(null)
-                                    setForm({ nome: "", endereco: "", clienteResponsavel: "", status: "", descricao: "" })
-                                }}
-                            >
-                                Cancelar
-                            </button>
-                        )}
+                        <button type="button" className="botao-secundario" onClick={fecharModal}>
+                            Cancelar
+                        </button>
                     </div>
                 </form>
-            </div>
+            </Modal>
 
             <h2 className="lista-titulo">Obras cadastradas</h2>
 
@@ -181,25 +187,10 @@ function Obras()
                                     <span className="obra-descricao">{obra.descricao}</span>
                                 )}
                             </div>
-
                             <div className="obra-acoes">
-                                <span className={getBadgeClass(obra.status)}>
-                                    {obra.status}
-                                </span>
-
-                                <button
-                                    onClick={() => handleEdit(obra)}
-                                    className="botao-editar"
-                                >
-                                    Editar
-                                </button>
-
-                                <button
-                                    onClick={() => handleDelete(obra.id!)}
-                                    className="botao-excluir"
-                                >
-                                    Excluir
-                                </button>
+                                <span className={getBadgeClass(obra.status)}>{obra.status}</span>
+                                <button onClick={() => abrirModalEdicao(obra)} className="botao-editar">Editar</button>
+                                <button onClick={() => handleDelete(obra.id!)} className="botao-excluir">Excluir</button>
                             </div>
                         </div>
                     ))}

@@ -1,20 +1,38 @@
 import { useEffect, useState } from "react"
 import { api } from "../../services/api"
 import type { Usuario } from "../../types/usuarios"
+import Modal from "../../components/modal/modal"
 import "./Usuarios.css"
+
+const formVazio: Usuario = { nome: "", sobrenome: "", email: "", senha: "", perfil: "" }
 
 function Usuarios()
 {
     const [usuarios, setUsuarios] = useState<Usuario[]>([])
+    const [modalAberto, setModalAberto] = useState(false)
     const [edicaoId, setEdicaoId] = useState<number | null>(null)
-    const [form, setForm] = useState<Usuario>(
+    const [form, setForm] = useState<Usuario>(formVazio)
+
+    function abrirModalNovo()
     {
-        nome: "",
-        sobrenome: "",
-        email: "",
-        senha: "",
-        perfil: ""
-    })
+        setForm(formVazio)
+        setEdicaoId(null)
+        setModalAberto(true)
+    }
+
+    function abrirModalEdicao(usuario: Usuario)
+    {
+        setForm({...usuario, senha: ""})
+        setEdicaoId(usuario.id!)
+        setModalAberto(true)
+    }
+
+    function fecharModal()
+    {
+        setModalAberto(false)
+        setEdicaoId(null)
+        setForm(formVazio)
+    }
 
     async function carregarUsuarios()
     {
@@ -73,14 +91,18 @@ function Usuarios()
 
     return (
         <div className="pagina">
+            <div className="pagina-header">
+                <h1 className="titulo">Gerenciamento de Usuários</h1>
+                <button className="botao-primario" onClick={abrirModalNovo}>
+                    + Novo usuário
+                </button>
+            </div>
 
-            <h1 className="titulo">Gerenciamento de Usuários</h1>
-
-            <div className="card">
-                <h2 className="card-titulo">
-                    {edicaoId ? "Editar usuário" : "Novo usuário"}
-                </h2>
-
+            <Modal
+                aberto={modalAberto}
+                titulo={edicaoId ? "Editar usuário" : "Novo usuário"}
+                onFechar={fecharModal}
+            >
                 <form onSubmit={handleSubmit} className="form">
                     <div className="form-grid">
                         <input
@@ -90,7 +112,6 @@ function Usuarios()
                             required
                             className="input"
                         />
-
                         <input
                             placeholder="Sobrenome"
                             value={form.sobrenome}
@@ -98,7 +119,6 @@ function Usuarios()
                             required
                             className="input"
                         />
-
                         <input
                             type="email"
                             placeholder="E-mail"
@@ -107,16 +127,13 @@ function Usuarios()
                             required
                             className="input"
                         />
-
                         <input
                             type="password"
                             placeholder="Senha provisória"
                             value={form.senha}
                             onChange={e => setForm({ ...form, senha: e.target.value })}
-                            required
                             className="input"
                         />
-
                         <select
                             value={form.perfil}
                             onChange={e => setForm({ ...form, perfil: e.target.value })}
@@ -128,28 +145,16 @@ function Usuarios()
                             <option value="Cliente">Cliente</option>
                         </select>
                     </div>
-
                     <div className="botoes">
                         <button type="submit" className="botao-primario">
                             {edicaoId ? "Salvar alterações" : "Salvar usuário"}
                         </button>
-
-                        {edicaoId && (
-                            <button
-                                type="button"
-                                className="botao-secundario"
-                                onClick={() =>
-                                {
-                                    setEdicaoId(null)
-                                    setForm({ nome: "", sobrenome: "", email: "", senha: "", perfil: "" })
-                                }}
-                            >
-                                Cancelar
-                            </button>
-                        )}
+                        <button type="button" className="botao-secundario" onClick={fecharModal}>
+                            Cancelar
+                        </button>
                     </div>
                 </form>
-            </div>
+            </Modal>
 
             <h2 className="lista-titulo">Usuários cadastrados</h2>
 
@@ -163,25 +168,10 @@ function Usuarios()
                                 <span className="obra-nome">{usuario.nome} {usuario.sobrenome}</span>
                                 <span className="obra-detalhe">{usuario.email}</span>
                             </div>
-
                             <div className="obra-acoes">
-                                <span className={getBadgeClass(usuario.perfil)}>
-                                    {usuario.perfil}
-                                </span>
-
-                                <button
-                                    onClick={() => handleEdit(usuario)}
-                                    className="botao-editar"
-                                >
-                                    Editar
-                                </button>
-
-                                <button
-                                    onClick={() => handleDelete(usuario.id!)}
-                                    className="botao-excluir"
-                                >
-                                    Excluir
-                                </button>
+                                <span className={getBadgeClass(usuario.perfil)}>{usuario.perfil}</span>
+                                <button onClick={() => abrirModalEdicao(usuario)} className="botao-editar">Editar</button>
+                                <button onClick={() => handleDelete(usuario.id!)} className="botao-excluir">Excluir</button>
                             </div>
                         </div>
                     ))}

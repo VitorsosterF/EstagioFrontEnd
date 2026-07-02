@@ -1,4 +1,6 @@
 import "./login.css"
+import { useState } from "react"
+import { login, salvarToken } from "../../services/auth"
 
 interface LoginProps
 {
@@ -7,6 +9,30 @@ interface LoginProps
 
 function Login({ onLogin }: LoginProps)
 {
+    const [email, setEmail] = useState("")
+    const [senha, setSenha] = useState("")
+    const [erro, setErro] = useState("")
+    const [carregando, setCarregando] = useState(false)
+
+    async function handleLogin() {
+        if (!email || !senha) {
+            setErro("Preencha e-mail e senha.")
+            return
+        }
+        setCarregando(true)
+        setErro("")
+        try {
+            const token = await login(email, senha)
+            salvarToken(token)
+            onLogin()
+        } catch {
+            setErro("E-mail ou senha inválidos.")
+        } finally {
+            setCarregando(false)
+        }
+    }
+
+
     return (
         <div className="login-pagina">
 
@@ -34,6 +60,8 @@ function Login({ onLogin }: LoginProps)
                             type="email"
                             placeholder="seu@email.com"
                             className="input"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
                         />
                     </div>
 
@@ -43,13 +71,20 @@ function Login({ onLogin }: LoginProps)
                             type="password"
                             placeholder="senha"
                             className="input"
+                            value={senha}
+                            onChange={e => setSenha(e.target.value)}
+                            onKeyDown={e => { if (e.key === "Enter") handleLogin() }}
                         />
                     </div>
 
                     <a className="login-esqueci">Esqueci minha senha</a>
 
-                    <button className="botao-primario login-botao" onClick={onLogin}>
-                        Entrar
+                    <button 
+                        className="botao-primario login-botao" 
+                        onClick={handleLogin} 
+                        disabled={carregando}
+                    >
+                        {carregando ? "Entrando..." : "Entrar"}
                     </button>
                 </div>
 
