@@ -89,7 +89,8 @@
     @apply bg-[#2c3034] border border-white/10 rounded-xl overflow-hidden cursor-pointer transition-transform duration-200 hover:-translate-y-1 hover:border-white/25;
 }
 .obra-card-imagem {
-    @apply w-full h-36 overflow-hidden bg-[#1a1d20];
+    @apply w-full overflow-hidden bg-[#1a1d20];
+    aspect-ratio: 4 / 3;
 }
 .obra-card-imagem img {
     @apply w-full h-full object-cover;
@@ -144,4 +145,8 @@
 }
 .detalhe-valor {
     @apply text-white text-sm;
+}   
+.obras-grid {
+    @apply grid gap-4 mt-4;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
 }

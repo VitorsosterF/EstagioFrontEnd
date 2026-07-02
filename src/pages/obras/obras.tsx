@@ -15,6 +15,7 @@ function Obras()
     const [form, setForm] = useState<Obra>(formVazio)
     const [imagem, setImagem] = useState<File | null>(null)
     const [preview, setPreview] = useState<string | null>(null)
+    const [usuarios, setUsuarios] = useState<{ id: number, nome: string, sobrenome: string }[]>([])
     const navigate = useNavigate()
 
     async function carregarObras()
@@ -23,9 +24,16 @@ function Obras()
         setObras(respostaApi.data)
     }
 
+    async function carregarUsuarios()
+    {
+        const respostaApi = await api.get("/usuarios")
+        setUsuarios(respostaApi.data)
+    }
+
     useEffect(() =>
     {
         carregarObras()
+        carregarUsuarios()
     }, [])
 
     function abrirModalCriacao()
@@ -139,7 +147,19 @@ function Obras()
                     <div className="form-grid">
                         <input placeholder="Nome da obra" value={form.nome} onChange={e => setForm({ ...form, nome: e.target.value })} required className="input" />
                         <input placeholder="Endereço" value={form.endereco} onChange={e => setForm({ ...form, endereco: e.target.value })} required className="input" />
-                        <input placeholder="Cliente responsável" value={form.clienteResponsavel} onChange={e => setForm({ ...form, clienteResponsavel: e.target.value })} required className="input" />
+                        <select
+                            value={form.clienteResponsavel}
+                            onChange={e => setForm({ ...form, clienteResponsavel: e.target.value })}
+                            required
+                            className="input"
+                        >
+                            <option value="" disabled>Selecionar cliente responsável</option>
+                            {usuarios.map(u => (
+                                <option key={u.id} value={`${u.nome} ${u.sobrenome}`}>
+                                    {u.nome} {u.sobrenome}
+                                </option>
+                            ))}
+                        </select>
                         <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} required className="input">
                             <option value="" disabled>Selecionar status</option>
                             <option value="Em andamento">Em andamento</option>

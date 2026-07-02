@@ -78,11 +78,6 @@ function Usuarios()
         carregarUsuarios()
     }
 
-    async function handleEdit(usuario: Usuario)
-    {
-        setForm(usuario)
-        setEdicaoId(usuario.id!)
-    }
 
     function getBadgeClass(perfil: string)
     {
