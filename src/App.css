@@ -70,16 +70,16 @@
     @apply text-xs font-medium px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400;
 }
 .badge-admin {
-    @apply text-xs font-medium px-3 py-1 rounded-full bg-blue-500/15 text-blue-400;
+    @apply w-2 h-2 rounded-full bg-blue-400 inline-block;
 }
 .badge-cliente {
-    @apply text-xs font-medium px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400;
+    @apply w-2 h-2 rounded-full bg-yellow-400 inline-block;
 }
 .botao-editar {
-    @apply text-xs text-[#378ADD] hover:text-[#2d6fb5] transition-colors cursor-pointer bg-transparent border-none;
+    @apply text-white/60 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-1;
 }
 .botao-excluir {
-    @apply text-xs text-red-400 hover:text-red-300 transition-colors cursor-pointer bg-transparent border-none;
+    @apply text-white/60 hover:text-white transition-colors cursor-pointer bg-transparent border-none p-1;
 }
 .obras-grid {
     @apply grid gap-4 mt-4;

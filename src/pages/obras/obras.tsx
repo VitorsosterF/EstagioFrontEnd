@@ -4,9 +4,9 @@ import type { Obra } from "../../types/obras"
 import Modal from "../../components/modal/modal"
 import "./Obras.css"
 import { useNavigate } from "react-router-dom"
+import { Pencil, Trash2 } from "lucide-react"
 
-const formVazio: Obra = { nome: "", rua: "", numero: "", complemento: "", clienteResponsavel: "", status: "", descricao: "" }
-
+const formVazio: Obra = { nome: "", rua: "", numero: "", complemento: "", clienteResponsavel: "", status: "Não iniciada", descricao: "" }
 function Obras()
 {
     const [obras, setObras] = useState<Obra[]>([])
@@ -47,6 +47,7 @@ function Obras()
 
     function abrirModalEdicao(obra: Obra, e: React.MouseEvent)
     {
+        e.stopPropagation()
         setForm(obra)
         setEdicaoId(obra.id!)
         setImagem(null)
@@ -135,7 +136,7 @@ function Obras()
                     <div className="form-grid">
                         <input placeholder="Nome da obra" value={form.nome} onChange={e => setForm({ ...form, nome: e.target.value })} required className="input" />
                         <input placeholder="Rua" value={form.rua} onChange={e => setForm({ ...form, rua: e.target.value })} required className="input" />
-                        <input placeholder="Número" value={form.numero} onChange={e => setForm({ ...form, numero: e.target.value })} required className="input" />
+                        <input placeholder="Número" type="number" value={form.numero} onChange={e => setForm({ ...form, numero: e.target.value })} required className="input" />
                         <input placeholder="Complemento" value={form.complemento} onChange={e => setForm({ ...form, complemento: e.target.value })} className="input" />
                         <select
                             value={form.clienteResponsavel}
@@ -151,7 +152,7 @@ function Obras()
                             ))}
                         </select>
                         <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} required className="input">
-                            <option value="" disabled>Selecionar status</option>
+                            <option value="Não iniciada">Não iniciada</option>
                             <option value="Em andamento">Em andamento</option>
                             <option value="Concluída">Concluída</option>
                             <option value="Pausada">Pausada</option>
@@ -196,8 +197,12 @@ function Obras()
                             <div className="obra-card-rodape">
                                 <span className="obra-card-nome">{obra.nome}</span>
                                 <div className="obra-card-acoes">
-                                    <button onClick={(e) => abrirModalEdicao(obra, e)} className="botao-editar">Editar</button>
-                                    <button onClick={(e) => handleDelete(obra.id!, e)} className="botao-excluir">Excluir</button>
+                                    <button onClick={(e) => abrirModalEdicao(obra, e)} className="botao-editar">
+                                        <Pencil size={15} />
+                                    </button>
+                                    <button onClick={(e) => handleDelete(obra.id!, e)} className="botao-excluir">
+                                        <Trash2 size={15} />
+                                    </button>
                                 </div>
                             </div>
                         </div>

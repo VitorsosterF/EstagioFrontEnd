@@ -4,6 +4,7 @@ import { api } from "../../services/api"
 import type { Obra } from "../../types/obras"
 import Modal from "../../components/modal/modal"
 import "./obraDetalhes.css"
+import { Pencil, Trash2 } from "lucide-react"
 
 function ObraDetalhe()
 {
@@ -102,8 +103,8 @@ function ObraDetalhe()
                     <div className="detalhe-header">
                         <h1 className="detalhe-nome">{obra.nome}</h1>
                         <div className="detalhe-acoes">
-                            <button className="botao-editar" onClick={abrirModalEdicao}>Editar</button>
-                            <button className="botao-excluir" onClick={handleDelete}>Excluir</button>
+                            <button className="botao-editar" onClick={abrirModalEdicao}><Pencil size={15} /></button>
+                            <button className="botao-excluir" onClick={handleDelete}><Trash2 size={15} /></button>
                         </div>
                     </div>
 
@@ -145,7 +146,7 @@ function ObraDetalhe()
                                 ))}
                             </select>
                             <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} required className="input">
-                                <option value="" disabled>Selecionar status</option>
+                                <option value="Não iniciada">Não iniciada</option>
                                 <option value="Em andamento">Em andamento</option>
                                 <option value="Concluída">Concluída</option>
                                 <option value="Pausada">Pausada</option>

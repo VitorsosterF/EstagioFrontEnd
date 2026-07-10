@@ -3,6 +3,7 @@ import { api } from "../../services/api"
 import type { Usuario } from "../../types/usuarios"
 import Modal from "../../components/modal/modal"
 import "./Usuarios.css"
+import { Pencil, Trash2 } from "lucide-react"
 
 
 const formVazio: Usuario = { nome: "", sobrenome: "", email: "", senha: "", perfil: "" }
@@ -69,14 +70,23 @@ function Usuarios()
             perfil: ""
         })
 
+        fecharModal()
         carregarUsuarios()
     }
 
     async function handleDelete(id: number)
+{
+    if (!confirm("Deseja excluir este usuário?")) return
+    try
     {
         await api.delete(`/usuarios/${id}`)
         carregarUsuarios()
     }
+    catch (error: any)
+    {
+        alert(error.response?.data ?? "Erro ao excluir usuário.")
+    }
+}
 
 
     function getBadgeClass(perfil: string)
@@ -142,7 +152,7 @@ function Usuarios()
                         </select>
                     </div>
                     <div className="botoes">
-                        <button type="submit" className="botao-primario" onClick={fecharModal}>
+                        <button type="submit" className="botao-primario">
                             {edicaoId ? "Salvar alterações" : "Salvar usuário"}
                         </button>
                         <button type="button" className="botao-secundario" onClick={fecharModal}>
@@ -165,9 +175,9 @@ function Usuarios()
                                 <span className="obra-detalhe">{usuario.email}</span>
                             </div>
                             <div className="obra-acoes">
-                                <span className={getBadgeClass(usuario.perfil)}>{usuario.perfil}</span>
-                                <button onClick={() => abrirModalEdicao(usuario)} className="botao-editar">Editar</button>
-                                <button onClick={() => handleDelete(usuario.id!)} className="botao-excluir">Excluir</button>
+                                <span className={getBadgeClass(usuario.perfil)}></span>
+                                <button onClick={() => abrirModalEdicao(usuario)} className="botao-editar"><Pencil size={15} /></button>
+                                <button onClick={() => handleDelete(usuario.id!)} className="botao-excluir"><Trash2 size={15} /></button>
                             </div>
                         </div>
                     ))}
