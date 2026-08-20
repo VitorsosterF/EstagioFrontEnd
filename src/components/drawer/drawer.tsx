@@ -35,6 +35,13 @@ function Drawer({ paginaAtiva, setPaginaAtiva, onSair, nomeUsuario}: DrawerProps
                 >
                     Usuários
                 </button>
+
+                <button
+                    className={`drawer-link ${location.pathname === "/templates" ? "drawer-link-ativo" : ""}`}
+                    onClick={() => navigate("/templates")}
+                >
+                    Templates
+                </button>
             </nav>
 
             <div className="drawer-footer">

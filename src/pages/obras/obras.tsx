@@ -74,6 +74,13 @@ function Obras()
         }
     }
 
+    function getBadgeClass(status: string)
+    {
+        if (status === "Não iniciada") return "badge-nao-iniciada"
+        if (status === "Em andamento") return "badge-andamento"
+        if (status === "Concluída") return "badge-concluida"
+        return "badge-pausada"
+    }
 
     async function handleSubmit(e: React.FormEvent) 
     {
@@ -196,6 +203,7 @@ function Obras()
                             </div>
                             <div className="obra-card-rodape">
                                 <span className="obra-card-nome">{obra.nome}</span>
+                                <span className={getBadgeClass(obra.status)}>{obra.status}</span>
                                 <div className="obra-card-acoes">
                                     <button onClick={(e) => abrirModalEdicao(obra, e)} className="botao-editar">
                                         <Pencil size={15} />

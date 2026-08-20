@@ -5,6 +5,7 @@ import Login from "./pages/login/login"
 import Obras from "./pages/obras/obras"
 import Usuarios from "./pages/usuarios/usuarios"
 import ObraDetalhe from "./pages/obraDetalhes/obraDetalhes"
+import Templates from "./pages/templates/templates"
 import "./App.css"
 import { removerToken } from "./services/auth"
 
@@ -35,6 +36,7 @@ function Layout({ nomeUsuario }: LayoutProps)
                     <Route path="/obras" element={<Obras />} />
                     <Route path="/obras/:id" element={<ObraDetalhe />} />
                     <Route path="/usuarios" element={<Usuarios />} />
+                    <Route path="/templates" element={<Templates />} />
                     <Route path="*" element={<Navigate replace to="/obras" />} />
                 </Routes>
             </main>
