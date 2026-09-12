@@ -5,6 +5,7 @@ import Modal from "../../components/modal/modal"
 import "./Obras.css"
 import { useNavigate } from "react-router-dom"
 import { Pencil, Trash2 } from "lucide-react"
+import { obterClasseBadgeStatus } from "../../utils/statusObra"
 
 const formVazio: Obra = { nome: "", rua: "", numero: "", complemento: "", clienteId: "", status: "Não iniciada", descricao: "" }
 function Obras()
@@ -72,14 +73,6 @@ function Obras()
             setImagem(arquivo)
             setPreview(URL.createObjectURL(arquivo))
         }
-    }
-
-    function getBadgeClass(status: string)
-    {
-        if (status === "Não iniciada") return "badge-nao-iniciada"
-        if (status === "Em andamento") return "badge-andamento"
-        if (status === "Concluída") return "badge-concluida"
-        return "badge-pausada"
     }
 
     async function handleSubmit(e: React.FormEvent) 
@@ -203,7 +196,7 @@ function Obras()
                             </div>
                             <div className="obra-card-rodape">
                                 <span className="obra-card-nome">{obra.nome}</span>
-                                <span className={getBadgeClass(obra.status)}>{obra.status}</span>
+                                <span className={obterClasseBadgeStatus(obra.status)}>{obra.status}</span>
                                 <div className="obra-card-acoes">
                                     <button onClick={(e) => abrirModalEdicao(obra, e)} className="botao-editar">
                                         <Pencil size={15} />

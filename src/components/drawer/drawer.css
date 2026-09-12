@@ -1,15 +1,27 @@
 @import "../../App.css";
 
 .drawer {
-    @apply fixed top-0 left-0 h-screen w-56 bg-[#2c3034] border-r border-white/10 flex flex-col;
+    @apply fixed top-0 left-0 h-screen w-56 bg-[#2c3034] border-r border-white/10 flex flex-col transition-[width] duration-200 overflow-hidden;
+}
+
+.drawer-colapsada {
+    @apply w-16;
 }
 
 .drawer-logo {
-    @apply px-6 py-5 border-b border-white/10;
+    @apply px-6 py-5 border-b border-white/10 flex items-center justify-between gap-2;
+}
+
+.drawer-logo-colapsada {
+    @apply px-0 justify-center;
 }
 
 .drawer-logo-texto {
-    @apply text-white font-medium text-sm;
+    @apply text-white font-medium text-sm whitespace-nowrap;
+}
+
+.drawer-toggle {
+    @apply flex-shrink-0 text-white/40 hover:text-white bg-transparent border border-white/10 hover:border-white/25 rounded-md cursor-pointer p-1 transition-colors;
 }
 
 .drawer-nav {
@@ -17,7 +29,15 @@
 }
 
 .drawer-link {
-    @apply w-full text-left px-4 py-2.5 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 transition-colors cursor-pointer;
+    @apply w-full text-left px-4 py-2.5 rounded-lg text-sm text-white/60 hover:text-white hover:bg-white/5 transition-colors cursor-pointer flex items-center gap-3 whitespace-nowrap;
+}
+
+.drawer-link-colapsada {
+    @apply justify-center px-0;
+}
+
+.drawer-link-icone {
+    @apply flex-shrink-0;
 }
 
 .drawer-link-ativo {
@@ -32,22 +52,34 @@
     @apply flex items-center gap-3;
 }
 
+.drawer-usuario-colapsada {
+    @apply justify-center;
+}
+
 .drawer-avatar {
     @apply w-8 h-8 rounded-full bg-[#B5D4F4] flex items-center justify-center text-xs font-medium text-[#0C447C] flex-shrink-0;
 }
 
 .drawer-usuario-info {
-    @apply flex flex-col;
+    @apply flex flex-col min-w-0;
 }
 
 .drawer-usuario-nome {
-    @apply text-sm text-white font-medium;
+    @apply text-sm text-white font-medium truncate;
 }
 
 .drawer-usuario-perfil {
-    @apply text-xs text-white/40;
+    @apply flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded mt-1 w-fit whitespace-nowrap;
+}
+
+.drawer-usuario-perfil-admin {
+    @apply bg-blue-500/15 text-blue-400;
+}
+
+.drawer-usuario-perfil-cliente {
+    @apply bg-yellow-500/15 text-yellow-400;
 }
 
 .drawer-sair {
-    @apply w-full text-left px-4 py-2.5 rounded-lg text-sm text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-colors cursor-pointer;
+    @apply w-full text-left px-4 py-2.5 rounded-lg text-sm text-red-400 hover:text-red-300 hover:bg-red-400/10 transition-colors cursor-pointer flex items-center gap-3 whitespace-nowrap;
 }

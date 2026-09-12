@@ -1,0 +1,30 @@
+@import "../../App.css";
+
+.inicio-colunas {
+    @apply grid gap-6;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.inicio-secao {
+    @apply flex flex-col;
+}
+
+.inicio-secao-header {
+    @apply flex items-center justify-between mb-2;
+}
+
+.inicio-secao-titulo {
+    @apply mt-0 mb-0;
+}
+
+.inicio-ver-tudo {
+    @apply flex items-center gap-1 text-[#378ADD] text-xs bg-transparent border-none cursor-pointer hover:underline;
+}
+
+.inicio-item {
+    @apply bg-[#2c3034] border border-white/10 rounded-xl px-4 py-3 flex items-center justify-between gap-2 cursor-pointer transition-colors hover:border-white/25;
+}
+
+.inicio-item-titulo {
+    @apply text-white text-sm truncate flex-1 min-w-0;
+}

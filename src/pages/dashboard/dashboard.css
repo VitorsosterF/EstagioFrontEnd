@@ -1,0 +1,45 @@
+@import "../../App.css";
+
+.dashboard-botao-exportar {
+    @apply flex items-center gap-2;
+}
+
+.dashboard-barras {
+    @apply flex flex-col gap-4 bg-[#2c3034] border border-white/10 rounded-xl p-5 mb-8;
+}
+
+.dashboard-barra-linha {
+    @apply flex items-center gap-3;
+}
+
+.dashboard-barra-status {
+    @apply w-32 flex-shrink-0;
+}
+
+.dashboard-barra-trilha {
+    @apply flex-1 h-2.5 rounded-full bg-white/5 overflow-hidden;
+}
+
+.dashboard-barra-preenchimento {
+    @apply h-full rounded-full transition-[width] duration-300;
+}
+
+.dashboard-barra-nao-iniciada {
+    @apply bg-gray-400;
+}
+
+.dashboard-barra-andamento {
+    @apply bg-blue-400;
+}
+
+.dashboard-barra-pausada {
+    @apply bg-yellow-400;
+}
+
+.dashboard-barra-concluida {
+    @apply bg-green-400;
+}
+
+.dashboard-barra-contagem {
+    @apply text-white/60 text-xs w-6 text-right flex-shrink-0;
+}

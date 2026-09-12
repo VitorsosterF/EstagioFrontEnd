@@ -29,7 +29,7 @@
 }
 
 .obra-card-nome {
-    @apply text-white text-sm font-medium truncate;
+    @apply text-white text-sm font-medium truncate flex-1 min-w-0;
 }
 
 .obra-card-acoes {
@@ -63,15 +63,15 @@
 
 /* Badges de status */
 .badge-andamento {
-    @apply text-xs font-medium px-3 py-1 rounded-full bg-blue-500/15 text-blue-400;
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-blue-500/15 text-blue-400 whitespace-nowrap flex-shrink-0;
 }
 
 .badge-concluida {
-    @apply text-xs font-medium px-3 py-1 rounded-full bg-green-500/15 text-green-400;
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-green-500/15 text-green-400 whitespace-nowrap flex-shrink-0;
 }
 
 .badge-pausada {
-    @apply text-xs font-medium px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400;
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400 whitespace-nowrap flex-shrink-0;
 }
 
 /* Textarea para descrição */

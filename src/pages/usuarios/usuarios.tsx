@@ -3,7 +3,8 @@ import { api } from "../../services/api"
 import type { Usuario } from "../../types/usuarios"
 import Modal from "../../components/modal/modal"
 import "./Usuarios.css"
-import { Pencil, Trash2 } from "lucide-react"
+import { Pencil, Trash2, ShieldCheck, User } from "lucide-react"
+import { ehPerfilAdmin, obterClasseBadgePerfil } from "../../utils/perfil"
 
 
 const formVazio: Usuario = { nome: "", sobrenome: "", email: "", senha: "", perfil: "" }
@@ -89,12 +90,6 @@ function Usuarios()
 }
 
 
-    function getBadgeClass(perfil: string)
-    {
-        if (perfil === "Admin") return "badge-admin"
-        return "badge-cliente"
-    }
-
     return (
         <div className="pagina">
             <div className="pagina-header">
@@ -175,7 +170,10 @@ function Usuarios()
                                 <span className="obra-detalhe">{usuario.email}</span>
                             </div>
                             <div className="obra-acoes">
-                                <span className={getBadgeClass(usuario.perfil)}></span>
+                                <span className={`badge-perfil ${obterClasseBadgePerfil(usuario.perfil)}`}>
+                                    {ehPerfilAdmin(usuario.perfil) ? <ShieldCheck size={12} /> : <User size={12} />}
+                                    {usuario.perfil || "Sem perfil"}
+                                </span>
                                 <button onClick={() => abrirModalEdicao(usuario)} className="botao-editar"><Pencil size={15} /></button>
                                 <button onClick={() => handleDelete(usuario.id!)} className="botao-excluir"><Trash2 size={15} /></button>
                             </div>

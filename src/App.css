@@ -6,7 +6,11 @@
 }
 
 .app-conteudo {
-    @apply ml-56 flex-1 min-h-screen;
+    @apply ml-56 flex-1 min-h-screen transition-[margin] duration-200;
+}
+
+.app-conteudo-colapsado {
+    @apply ml-16;
 }
 
 /* Botões reutilizáveis */
@@ -75,16 +79,39 @@
 }
 
 /* Badges gerais */
-.badge-admin {
-    @apply w-2 h-2 rounded-full bg-blue-400 inline-block;
-}
-
-.badge-cliente {
-    @apply w-2 h-2 rounded-full bg-yellow-400 inline-block;
-}
-
 .badge-nao-iniciada {
-    @apply text-xs font-medium px-3 py-1 rounded-full bg-gray-500/15 text-gray-400;
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-gray-500/15 text-gray-400 whitespace-nowrap flex-shrink-0;
+}
+
+/* Badge de perfil de usuário (Admin/Cliente) — texto + cor, não só uma bolinha */
+.badge-perfil {
+    @apply flex items-center gap-1.5 text-xs font-medium px-3 py-1 rounded-full whitespace-nowrap flex-shrink-0 w-fit;
+}
+
+.badge-perfil-admin {
+    @apply bg-blue-500/15 text-blue-400;
+}
+
+.badge-perfil-cliente {
+    @apply bg-yellow-500/15 text-yellow-400;
+}
+
+/* Cards de métrica (usados no Dashboard e na tela Início) */
+.metric-grid {
+    @apply grid gap-4 mb-8;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.metric-card {
+    @apply bg-[#2c3034] border border-white/10 rounded-xl p-5 flex flex-col gap-2;
+}
+
+.metric-card-label {
+    @apply text-white/50 text-xs uppercase tracking-wide;
+}
+
+.metric-card-valor {
+    @apply text-white text-2xl font-semibold;
 }
 
 /* Upload */
