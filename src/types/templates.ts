@@ -5,4 +5,5 @@ export interface Template {
     corpo: string
     variaveis?: string
     criadoEm?: string
+    padraoNotificacaoStatus?: boolean
 }

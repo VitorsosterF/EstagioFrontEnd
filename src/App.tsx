@@ -6,6 +6,7 @@ import Obras from "./pages/obras/obras"
 import Usuarios from "./pages/usuarios/usuarios"
 import ObraDetalhe from "./pages/obraDetalhes/obraDetalhes"
 import Templates from "./pages/templates/templates"
+import Notificacoes from "./pages/notificacoes/notificacoes"
 import "./App.css"
 import { removerToken } from "./services/auth"
 
@@ -15,8 +16,6 @@ interface LayoutProps {
 
 function Layout({ nomeUsuario }: LayoutProps)
 {
-    const [paginaAtiva, setPaginaAtiva] = useState("obras")
-
     function handleSair()
     {
         removerToken()
@@ -26,8 +25,6 @@ function Layout({ nomeUsuario }: LayoutProps)
     return (
         <div className="app-container">
             <Drawer
-                paginaAtiva={paginaAtiva}
-                setPaginaAtiva={setPaginaAtiva}
                 onSair={handleSair}
                 nomeUsuario={nomeUsuario}
             />
@@ -37,6 +34,7 @@ function Layout({ nomeUsuario }: LayoutProps)
                     <Route path="/obras/:id" element={<ObraDetalhe />} />
                     <Route path="/usuarios" element={<Usuarios />} />
                     <Route path="/templates" element={<Templates />} />
+                    <Route path="/notificacoes" element={<Notificacoes />} />
                     <Route path="*" element={<Navigate replace to="/obras" />} />
                 </Routes>
             </main>

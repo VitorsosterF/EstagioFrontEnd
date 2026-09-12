@@ -3,13 +3,11 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 interface DrawerProps
 {
-    paginaAtiva: string
-    setPaginaAtiva: (pagina: string) => void
     onSair: () => void
     nomeUsuario: string
 }
 
-function Drawer({ paginaAtiva, setPaginaAtiva, onSair, nomeUsuario}: DrawerProps)
+function Drawer({ onSair, nomeUsuario}: DrawerProps)
 {
     const navigate = useNavigate()
     const location = useLocation()
@@ -41,6 +39,13 @@ function Drawer({ paginaAtiva, setPaginaAtiva, onSair, nomeUsuario}: DrawerProps
                     onClick={() => navigate("/templates")}
                 >
                     Templates
+                </button>
+
+                <button
+                    className={`drawer-link ${location.pathname === "/notificacoes" ? "drawer-link-ativo" : ""}`}
+                    onClick={() => navigate("/notificacoes")}
+                >
+                    Notificações
                 </button>
             </nav>
 

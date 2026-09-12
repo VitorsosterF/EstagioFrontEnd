@@ -168,3 +168,42 @@
 .templates-dica {
     @apply text-white/40 text-xs italic;
 }
+.templates-checkbox {
+    @apply flex items-center gap-2 text-white/60 text-xs cursor-pointer select-none;
+}
+.badge-padrao {
+    @apply ml-2 text-[10px] font-medium px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-400 align-middle;
+}
+.badge-lida {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-white/5 text-white/40;
+}
+.badge-nao-lida {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-cyan-500/15 text-cyan-400;
+}
+.notificacao-card {
+    @apply bg-[#2c3034] border border-white/10 rounded-xl px-6 py-4 flex items-start justify-between gap-4;
+}
+.notificacao-card-nao-lida {
+    @apply border-cyan-500/40;
+}
+.notificacao-info {
+    @apply flex flex-col gap-1 flex-1;
+}
+.notificacao-mensagem {
+    @apply text-white text-sm;
+}
+.notificacao-meta {
+    @apply text-white/40 text-xs flex flex-wrap gap-x-2;
+}
+.notificacao-acoes {
+    @apply flex items-center gap-3 flex-shrink-0;
+}
+.notificacao-tabs {
+    @apply flex gap-2 mb-6;
+}
+.notificacao-tab {
+    @apply px-4 py-2 rounded-lg text-sm text-white/60 hover:text-white bg-transparent border border-white/10 cursor-pointer transition-colors;
+}
+.notificacao-tab-ativa {
+    @apply bg-[#378ADD]/15 text-[#378ADD] border-[#378ADD]/30;
+}

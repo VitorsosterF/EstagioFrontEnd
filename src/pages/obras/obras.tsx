@@ -6,7 +6,7 @@ import "./Obras.css"
 import { useNavigate } from "react-router-dom"
 import { Pencil, Trash2 } from "lucide-react"
 
-const formVazio: Obra = { nome: "", rua: "", numero: "", complemento: "", clienteResponsavel: "", status: "Não iniciada", descricao: "" }
+const formVazio: Obra = { nome: "", rua: "", numero: "", complemento: "", clienteId: "", status: "Não iniciada", descricao: "" }
 function Obras()
 {
     const [obras, setObras] = useState<Obra[]>([])
@@ -48,7 +48,7 @@ function Obras()
     function abrirModalEdicao(obra: Obra, e: React.MouseEvent)
     {
         e.stopPropagation()
-        setForm(obra)
+        setForm({ ...obra, clienteId: obra.cliente?.id ?? "" })
         setEdicaoId(obra.id!)
         setImagem(null)
         setPreview(obra.imagemUrl ? `http://localhost:8080${obra.imagemUrl}` : null)
@@ -146,14 +146,14 @@ function Obras()
                         <input placeholder="Número" type="number" value={form.numero} onChange={e => setForm({ ...form, numero: e.target.value })} required className="input" />
                         <input placeholder="Complemento" value={form.complemento} onChange={e => setForm({ ...form, complemento: e.target.value })} className="input" />
                         <select
-                            value={form.clienteResponsavel}
-                            onChange={e => setForm({ ...form, clienteResponsavel: e.target.value })}
+                            value={form.clienteId}
+                            onChange={e => setForm({ ...form, clienteId: Number(e.target.value) })}
                             required
                             className="input"
                         >
                             <option value="" disabled>Selecionar cliente responsável</option>
                             {usuarios.map(u => (
-                                <option key={u.id} value={`${u.nome} ${u.sobrenome}`}>
+                                <option key={u.id} value={u.id}>
                                     {u.nome} {u.sobrenome}
                                 </option>
                             ))}

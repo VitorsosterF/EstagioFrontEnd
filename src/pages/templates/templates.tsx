@@ -5,7 +5,7 @@ import Modal from "../../components/modal/modal"
 import { Pencil, Trash2 } from "lucide-react"
 import "./Templates.css"
 
-const formVazio: Template = { titulo: "", tipo: "", corpo: "" }
+const formVazio: Template = { titulo: "", tipo: "", corpo: "", padraoNotificacaoStatus: false }
 
 function Templates()
 {
@@ -132,6 +132,15 @@ function Templates()
                         </p>
                     )}
 
+                    <label className="templates-checkbox">
+                        <input
+                            type="checkbox"
+                            checked={!!form.padraoNotificacaoStatus}
+                            onChange={e => setForm({ ...form, padraoNotificacaoStatus: e.target.checked })}
+                        />
+                        Usar como padrão para notificação automática de mudança de status
+                    </label>
+
                     <div className="botoes">
                         <button type="submit" className="botao-primario">{edicaoId ? "Salvar alterações" : "Cadastrar template"}</button>
                         <button type="button" className="botao-secundario" onClick={fecharModal}>Cancelar</button>
@@ -148,7 +157,12 @@ function Templates()
                     {templates.map(template => (
                         <div key={template.id} className="obra-card">
                             <div className="obra-info">
-                                <span className="obra-nome">{template.titulo}</span>
+                                <span className="obra-nome">
+                                    {template.titulo}
+                                    {template.padraoNotificacaoStatus && (
+                                        <span className="badge-padrao">Padrão de status</span>
+                                    )}
+                                </span>
                                 <span className="obra-detalhe">{template.corpo}</span>
                                 {template.variaveis && (
                                     <span className="obra-descricao">Variáveis: {template.variaveis}</span>

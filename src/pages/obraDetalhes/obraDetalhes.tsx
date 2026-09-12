@@ -26,7 +26,7 @@ function ObraDetalhe()
     function abrirModalEdicao()
     {
         if (!obra) return
-        setForm(obra)
+        setForm({ ...obra, clienteId: obra.cliente?.id ?? "" })
         setPreview(obra.imagemUrl ? `http://localhost:8080${obra.imagemUrl}` : null)
         setImagem(null)
         setModalAberto(true)
@@ -116,7 +116,9 @@ function ObraDetalhe()
                     </div>
                     <div className="detalhe-campo">
                         <span className="detalhe-label">Cliente responsável</span>
-                        <span className="detalhe-valor">{obra.clienteResponsavel}</span>
+                        <span className="detalhe-valor">
+                            {obra.cliente ? `${obra.cliente.nome} ${obra.cliente.sobrenome}` : "-"}
+                        </span>
                     </div>
                     <div className="detalhe-campo">
                         <span className="detalhe-label">Status</span>
@@ -139,10 +141,10 @@ function ObraDetalhe()
                             <input placeholder="Rua" value={form.rua} onChange={e => setForm({ ...form, rua: e.target.value })} required className="input" />
                             <input placeholder="Número" value={form.numero} onChange={e => setForm({ ...form, numero: e.target.value })} required className="input" />
                             <input placeholder="Complemento" value={form.complemento} onChange={e => setForm({ ...form, complemento: e.target.value })} className="input" />
-                            <select value={form.clienteResponsavel} onChange={e => setForm({ ...form, clienteResponsavel: e.target.value })} required className="input">
+                            <select value={form.clienteId} onChange={e => setForm({ ...form, clienteId: Number(e.target.value) })} required className="input">
                                 <option value="" disabled>Selecionar cliente responsável</option>
                                 {usuarios.map(u => (
-                                    <option key={u.id} value={`${u.nome} ${u.sobrenome}`}>{u.nome} {u.sobrenome}</option>
+                                    <option key={u.id} value={u.id}>{u.nome} {u.sobrenome}</option>
                                 ))}
                             </select>
                             <select value={form.status} onChange={e => setForm({ ...form, status: e.target.value })} required className="input">
