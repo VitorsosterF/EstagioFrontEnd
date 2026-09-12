@@ -1,2 +1,49 @@
 @import "../../App.css";
 
+/* Container principal */
+.detalhe-container {
+    @apply flex gap-8 items-start;
+}
+
+/* Imagem da obra */
+.detalhe-imagem {
+    @apply w-[360px] h-[260px] flex-shrink-0 rounded-xl overflow-hidden bg-[#1a1d20] border border-white/10;
+}
+
+.detalhe-imagem img {
+    @apply w-full h-full object-cover;
+}
+
+.detalhe-sem-imagem {
+    @apply w-full h-full flex items-center justify-center text-5xl text-white/20;
+}
+
+/* Informações da obra */
+.detalhe-info {
+    @apply flex-1 flex flex-col gap-4;
+}
+
+.detalhe-header {
+    @apply flex items-center justify-between mb-1;
+}
+
+.detalhe-nome {
+    @apply text-white text-[22px] font-semibold mb-1;
+}
+
+.detalhe-acoes {
+    @apply flex gap-4;
+}
+
+/* Campos */
+.detalhe-campo {
+    @apply flex flex-col gap-1;
+}
+
+.detalhe-label {
+    @apply text-white/40 text-xs uppercase tracking-wide;
+}
+
+.detalhe-valor {
+    @apply text-white text-sm;
+}

@@ -1,1 +1,25 @@
 @import "../../App.css";
+
+/* Badges de tipo de template */
+.badge-email {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-purple-500/15 text-purple-400;
+}
+
+.badge-whatsapp {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-emerald-500/15 text-emerald-400;
+}
+
+/* Dica de variáveis */
+.templates-dica {
+    @apply text-white/40 text-xs italic;
+}
+
+/* Checkbox para padrão de notificação */
+.templates-checkbox {
+    @apply flex items-center gap-2 text-white/60 text-xs cursor-pointer select-none;
+}
+
+/* Badge de padrão */
+.badge-padrao {
+    @apply ml-2 text-[10px] font-medium px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-400 align-middle;
+}

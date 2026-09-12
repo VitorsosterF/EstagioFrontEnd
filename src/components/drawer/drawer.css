@@ -1,4 +1,4 @@
-@reference "../../App.css";
+@import "../../App.css";
 
 .drawer {
     @apply fixed top-0 left-0 h-screen w-56 bg-[#2c3034] border-r border-white/10 flex flex-col;

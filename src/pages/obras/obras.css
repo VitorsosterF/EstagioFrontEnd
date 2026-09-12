@@ -1,2 +1,80 @@
 @import "../../App.css";
 
+/* Grid de obras */
+.obras-grid {
+    @apply grid gap-4 mt-4;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+/* Card da obra (novo) */
+.obra-card-novo {
+    @apply bg-[#2c3034] border border-white/10 rounded-xl overflow-hidden cursor-pointer transition-transform duration-200 hover:-translate-y-1 hover:border-white/25;
+}
+
+.obra-card-imagem {
+    @apply w-full overflow-hidden bg-[#1a1d20];
+    aspect-ratio: 4 / 3;
+}
+
+.obra-card-imagem img {
+    @apply w-full h-full object-cover;
+}
+
+.obra-card-sem-imagem {
+    @apply w-full h-full flex items-center justify-center text-4xl text-white/20;
+}
+
+.obra-card-rodape {
+    @apply p-3 flex items-center justify-between gap-2;
+}
+
+.obra-card-nome {
+    @apply text-white text-sm font-medium truncate;
+}
+
+.obra-card-acoes {
+    @apply flex gap-1 flex-shrink-0;
+}
+
+/* Card da obra (lista) */
+.obra-card {
+    @apply bg-[#2c3034] border border-white/10 rounded-xl px-6 py-4 flex items-center justify-between;
+}
+
+.obra-info {
+    @apply flex flex-col gap-1;
+}
+
+.obra-nome {
+    @apply text-white font-medium text-sm;
+}
+
+.obra-detalhe {
+    @apply text-white/50 text-xs;
+}
+
+.obra-descricao {
+    @apply text-white/40 text-xs;
+}
+
+.obra-acoes {
+    @apply flex items-center gap-4;
+}
+
+/* Badges de status */
+.badge-andamento {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-blue-500/15 text-blue-400;
+}
+
+.badge-concluida {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-green-500/15 text-green-400;
+}
+
+.badge-pausada {
+    @apply text-xs font-medium px-3 py-1 rounded-full bg-yellow-500/15 text-yellow-400;
+}
+
+/* Textarea para descrição */
+.obras-textarea {
+    @apply bg-[#212529] border border-white/10 rounded-lg px-3 py-2 text-sm text-white;
+}
