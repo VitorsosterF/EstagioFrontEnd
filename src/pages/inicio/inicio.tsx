@@ -33,8 +33,9 @@ function Inicio()
     const metricasObras = calcularMetricasObras(obras)
     const metricasUsuarios = calcularMetricasUsuarios(usuarios)
     const obrasRecentes = metricasObras.obrasRecentes
-    // Sem data de criação no cadastro de usuário: assume-se que o array vem
-    // em ordem de inserção, então os últimos 5 são os mais recentes.
+    // Sem data de criação no cadastro de usuário: o backend garante ordem por
+    // id ascendente (findAllByOrderByIdAsc), então os últimos 5 são os mais
+    // recentes.
     const usuariosRecentes = [...usuarios].slice(-5).reverse()
 
     return (

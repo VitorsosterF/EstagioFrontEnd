@@ -5,6 +5,7 @@ import Modal from "../../components/modal/modal"
 import "./Usuarios.css"
 import { Pencil, Trash2, ShieldCheck, User } from "lucide-react"
 import { ehPerfilAdmin, obterClasseBadgePerfil } from "../../utils/perfil"
+import { obterMensagemErro } from "../../utils/erros"
 
 
 const formVazio: Usuario = { nome: "", sobrenome: "", email: "", senha: "", perfil: "" }
@@ -83,9 +84,9 @@ function Usuarios()
         await api.delete(`/usuarios/${id}`)
         carregarUsuarios()
     }
-    catch (error: any)
+    catch (error)
     {
-        alert(error.response?.data ?? "Erro ao excluir usuário.")
+        alert(obterMensagemErro(error, "Erro ao excluir usuário."))
     }
 }
 

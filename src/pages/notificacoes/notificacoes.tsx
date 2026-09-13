@@ -6,6 +6,7 @@ import type { Obra } from "../../types/obras"
 import type { Template } from "../../types/templates"
 import Modal from "../../components/modal/modal"
 import { Check, Trash2 } from "lucide-react"
+import { obterMensagemErro } from "../../utils/erros"
 import "./notificacoes.css"
 
 function formatarData(iso: string)
@@ -58,9 +59,9 @@ function Notificacoes()
             setModalAberto(false)
             carregarNotificacoes()
         }
-        catch (error: any)
+        catch (error)
         {
-            alert(error.response?.data ?? "Erro ao enviar notificação.")
+            alert(obterMensagemErro(error, "Erro ao enviar notificação."))
         }
         finally
         {
@@ -75,9 +76,9 @@ function Notificacoes()
             await api.patch(`/notificacoes/${id}/lida`)
             carregarNotificacoes()
         }
-        catch
+        catch (error)
         {
-            alert("Erro ao marcar notificação como lida.")
+            alert(obterMensagemErro(error, "Erro ao marcar notificação como lida."))
         }
     }
 
@@ -89,9 +90,9 @@ function Notificacoes()
             await api.delete(`/notificacoes/${id}`)
             carregarNotificacoes()
         }
-        catch
+        catch (error)
         {
-            alert("Erro ao excluir notificação.")
+            alert(obterMensagemErro(error, "Erro ao excluir notificação."))
         }
     }
 
