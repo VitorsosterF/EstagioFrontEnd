@@ -5,22 +5,26 @@ import type { Obra } from "../../types/obras"
 import Modal from "../../components/modal/modal"
 import "./obraDetalhes.css"
 import { Pencil, Trash2 } from "lucide-react"
+import { obterMensagemErro } from "../../utils/erros"
+import { ehPerfilAdmin } from "../../utils/perfil"
+import { obterPerfil } from "../../services/auth"
 
 function ObraDetalhe()
 {
     const { id } = useParams()
     const navigate = useNavigate()
+    const admin = ehPerfilAdmin(obterPerfil())
     const [obra, setObra] = useState<Obra | null>(null)
     const [modalAberto, setModalAberto] = useState(false)
     const [form, setForm] = useState<Obra | null>(null)
     const [imagem, setImagem] = useState<File | null>(null)
     const [preview, setPreview] = useState<string | null>(null)
-    const [usuarios, setUsuarios] = useState<{ id: number, nome: string, sobrenome: string }[]>([])
+    const [usuarios, setUsuarios] = useState<{ id: number, nome: string, sobrenome: string, perfil: string }[]>([])
 
     useEffect(() =>
     {
         api.get(`/obras/${id}`).then(res => setObra(res.data))
-        api.get("/usuarios").then(res => setUsuarios(res.data))
+        api.get("/usuarios").then(res => setUsuarios(res.data.filter((u: { perfil: string }) => u.perfil === "Cliente")))
     }, [id])
 
     function abrirModalEdicao()
@@ -65,9 +69,9 @@ function ObraDetalhe()
             setObra(res.data)
             fecharModal()
         }
-        catch
+        catch (error)
         {
-            alert("Erro ao salvar obra.")
+            alert(obterMensagemErro(error, "Erro ao salvar obra."))
         }
     }
 
@@ -79,9 +83,9 @@ function ObraDetalhe()
             await api.delete(`/obras/${id}`)
             navigate("/obras")
         }
-        catch
+        catch (error)
         {
-            alert("Erro ao excluir obra.")
+            alert(obterMensagemErro(error, "Erro ao excluir obra."))
         }
     }
 
@@ -102,10 +106,12 @@ function ObraDetalhe()
                 <div className="detalhe-info">
                     <div className="detalhe-header">
                         <h1 className="detalhe-nome">{obra.nome}</h1>
-                        <div className="detalhe-acoes">
-                            <button className="botao-editar" onClick={abrirModalEdicao}><Pencil size={15} /></button>
-                            <button className="botao-excluir" onClick={handleDelete}><Trash2 size={15} /></button>
-                        </div>
+                        {admin && (
+                            <div className="detalhe-acoes">
+                                <button className="botao-editar" onClick={abrirModalEdicao}><Pencil size={15} /></button>
+                                <button className="botao-excluir" onClick={handleDelete}><Trash2 size={15} /></button>
+                            </div>
+                        )}
                     </div>
 
                     <div className="detalhe-campo">

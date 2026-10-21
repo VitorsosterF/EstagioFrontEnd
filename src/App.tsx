@@ -10,7 +10,8 @@ import ObraDetalhe from "./pages/obraDetalhes/obraDetalhes"
 import Templates from "./pages/templates/templates"
 import Notificacoes from "./pages/notificacoes/notificacoes"
 import "./App.css"
-import { removerToken } from "./services/auth"
+import { removerToken, estaAutenticado, obterNomeUsuario, obterPerfil } from "./services/auth"
+import { ehPerfilAdmin } from "./utils/perfil"
 
 interface LayoutProps {
     nomeUsuario: string
@@ -50,8 +51,8 @@ function Layout({ nomeUsuario }: LayoutProps)
                     <Route path="/dashboard" element={<Dashboard />} />
                     <Route path="/obras" element={<Obras />} />
                     <Route path="/obras/:id" element={<ObraDetalhe />} />
-                    <Route path="/usuarios" element={<Usuarios />} />
-                    <Route path="/templates" element={<Templates />} />
+                    <Route path="/usuarios" element={ehPerfilAdmin(obterPerfil()) ? <Usuarios /> : <Navigate replace to="/inicio" />} />
+                    <Route path="/templates" element={ehPerfilAdmin(obterPerfil()) ? <Templates /> : <Navigate replace to="/inicio" />} />
                     <Route path="/notificacoes" element={<Notificacoes />} />
                     <Route path="*" element={<Navigate replace to="/inicio" />} />
                 </Routes>
@@ -62,8 +63,8 @@ function Layout({ nomeUsuario }: LayoutProps)
 
 function App()
 {
-    const [logado, setLogado] = useState(false)
-    const [nomeUsuario, setNomeUsuario] = useState("")
+    const [logado, setLogado] = useState(estaAutenticado())
+    const [nomeUsuario, setNomeUsuario] = useState(obterNomeUsuario())
 
     function handleLogin(nome: string)
     {

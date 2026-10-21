@@ -46,3 +46,21 @@
 .notificacao-tab-ativa {
     @apply bg-[#378ADD]/15 text-[#378ADD] border-[#378ADD]/30;
 }
+
+/* Marcar todas como lidas */
+.notif-marcar-todas {
+    @apply flex items-center gap-1.5 text-sm text-[#378ADD] hover:underline cursor-pointer bg-transparent border-none mb-6;
+}
+
+/* Prévia da mensagem no modal de envio manual */
+.notif-info {
+    @apply text-white/50 text-xs;
+}
+
+.notif-preview {
+    @apply flex flex-col gap-1 bg-[#212529] border border-white/10 rounded-lg p-3;
+}
+
+.notif-preview-corpo {
+    @apply text-white/70 text-sm whitespace-pre-line;
+}

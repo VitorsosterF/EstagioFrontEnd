@@ -23,3 +23,8 @@
 .badge-padrao {
     @apply ml-2 text-[10px] font-medium px-2 py-0.5 rounded-full bg-cyan-500/15 text-cyan-400 align-middle;
 }
+
+/* Aviso de variável desconhecida no corpo do template */
+.templates-aviso {
+    @apply text-yellow-400 text-xs;
+}

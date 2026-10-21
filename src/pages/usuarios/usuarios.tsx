@@ -16,6 +16,8 @@ function Usuarios()
     const [modalAberto, setModalAberto] = useState(false)
     const [edicaoId, setEdicaoId] = useState<number | null>(null)
     const [form, setForm] = useState<Usuario>(formVazio)
+    const [busca, setBusca] = useState("")
+    const [filtroPerfil, setFiltroPerfil] = useState("Todos")
 
     function abrirModalNovo()
     {
@@ -52,28 +54,23 @@ function Usuarios()
     async function handleSubmit(e: React.FormEvent)
     {
         e.preventDefault()
-
-        if (edicaoId)
+        try
         {
-            await api.put(`/usuarios/${edicaoId}`, form)
-            setEdicaoId(null)
+            if (edicaoId)
+            {
+                await api.put(`/usuarios/${edicaoId}`, form)
+            }
+            else
+            {
+                await api.post("/usuarios", form)
+            }
+            fecharModal()
+            carregarUsuarios()
         }
-        else
+        catch (error)
         {
-            await api.post("/usuarios", form)
+            alert(obterMensagemErro(error, "Erro ao salvar usuário."))
         }
-
-        setForm(
-        {
-            nome: "",
-            sobrenome: "",
-            email: "",
-            senha: "",
-            perfil: ""
-        })
-
-        fecharModal()
-        carregarUsuarios()
     }
 
     async function handleDelete(id: number)
@@ -90,6 +87,10 @@ function Usuarios()
     }
 }
 
+    const usuariosFiltrados = usuarios.filter(usuario =>
+        `${usuario.nome} ${usuario.sobrenome} ${usuario.email}`.toLowerCase().includes(busca.toLowerCase())
+        && (filtroPerfil === "Todos" || usuario.perfil === filtroPerfil)
+    )
 
     return (
         <div className="pagina">
@@ -160,11 +161,27 @@ function Usuarios()
 
             <h2 className="lista-titulo">Usuários cadastrados</h2>
 
-            {usuarios.length === 0 ? (
-                <p className="lista-vazia">Nenhum usuário cadastrado ainda.</p>
+            <div className="filtros-barra">
+                <input
+                    placeholder="Buscar por nome ou e-mail..."
+                    value={busca}
+                    onChange={e => setBusca(e.target.value)}
+                    className="input filtro-busca"
+                />
+                <select value={filtroPerfil} onChange={e => setFiltroPerfil(e.target.value)} className="input filtro-select">
+                    <option value="Todos">Todos os perfis</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Cliente">Cliente</option>
+                </select>
+            </div>
+
+            {usuariosFiltrados.length === 0 ? (
+                <p className="lista-vazia">
+                    {usuarios.length === 0 ? "Nenhum usuário cadastrado ainda." : "Nenhum usuário encontrado com esse filtro."}
+                </p>
             ) : (
                 <div className="lista">
-                    {usuarios.map(usuario => (
+                    {usuariosFiltrados.map(usuario => (
                         <div key={usuario.id} className="obra-card">
                             <div className="obra-info">
                                 <span className="obra-nome">{usuario.nome} {usuario.sobrenome}</span>

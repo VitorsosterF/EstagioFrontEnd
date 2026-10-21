@@ -5,18 +5,24 @@ import Modal from "../../components/modal/modal"
 import "./Obras.css"
 import { useNavigate } from "react-router-dom"
 import { Pencil, Trash2 } from "lucide-react"
-import { obterClasseBadgeStatus } from "../../utils/statusObra"
+import { obterClasseBadgeStatus, STATUS_OBRA } from "../../utils/statusObra"
+import { obterMensagemErro } from "../../utils/erros"
+import { ehPerfilAdmin } from "../../utils/perfil"
+import { obterPerfil } from "../../services/auth"
 
 const formVazio: Obra = { nome: "", rua: "", numero: "", complemento: "", clienteId: "", status: "Não iniciada", descricao: "" }
 function Obras()
 {
+    const admin = ehPerfilAdmin(obterPerfil())
     const [obras, setObras] = useState<Obra[]>([])
     const [edicaoId, setEdicaoId] = useState<number | null>(null)
     const [modalAberto, setModalAberto] = useState(false)
     const [form, setForm] = useState<Obra>(formVazio)
     const [imagem, setImagem] = useState<File | null>(null)
     const [preview, setPreview] = useState<string | null>(null)
-    const [usuarios, setUsuarios] = useState<{ id: number, nome: string, sobrenome: string }[]>([])
+    const [usuarios, setUsuarios] = useState<{ id: number, nome: string, sobrenome: string, perfil: string }[]>([])
+    const [busca, setBusca] = useState("")
+    const [filtroStatus, setFiltroStatus] = useState("Todos")
     const navigate = useNavigate()
 
     async function carregarObras()
@@ -28,7 +34,7 @@ function Obras()
     async function carregarUsuarios()
     {
         const respostaApi = await api.get("/usuarios")
-        setUsuarios(respostaApi.data)
+        setUsuarios(respostaApi.data.filter((u: { perfil: string }) => u.perfil === "Cliente"))
     }
 
     useEffect(() =>
@@ -98,13 +104,13 @@ function Obras()
             }
             fecharModal()
             carregarObras()
-        } catch (error) 
+        } catch (error)
         {
-            alert("Erro ao salvar obra. Verifique os dados e tente novamente.")
+            alert(obterMensagemErro(error, "Erro ao salvar obra. Verifique os dados e tente novamente."))
         }
     }
 
-    async function handleDelete(id: number, e: React.MouseEvent) 
+    async function handleDelete(id: number, e: React.MouseEvent)
     {
         e.stopPropagation()
         if (!confirm("Deseja excluir esta obra?")) return
@@ -113,18 +119,38 @@ function Obras()
             await api.delete(`/obras/${id}`)
             carregarObras()
         }
-        catch
+        catch (error)
         {
-            alert("Erro ao excluir obra.")
+            alert(obterMensagemErro(error, "Erro ao excluir obra."))
         }
     }
+
+    const obrasFiltradas = obras.filter(obra =>
+        obra.nome.toLowerCase().includes(busca.toLowerCase())
+        && (filtroStatus === "Todos" || obra.status === filtroStatus)
+    )
 
 
     return (
         <div className="pagina">
             <div className="pagina-header">
                 <h1 className="titulo">Gerenciamento de Obras</h1>
-                <button className="botao-primario" onClick={abrirModalCriacao}>+ Nova obra</button>
+                {admin && <button className="botao-primario" onClick={abrirModalCriacao}>+ Nova obra</button>}
+            </div>
+
+            <div className="filtros-barra">
+                <input
+                    placeholder="Buscar obra por nome..."
+                    value={busca}
+                    onChange={e => setBusca(e.target.value)}
+                    className="input filtro-busca"
+                />
+                <select value={filtroStatus} onChange={e => setFiltroStatus(e.target.value)} className="input filtro-select">
+                    <option value="Todos">Todos os status</option>
+                    {STATUS_OBRA.map(status => (
+                        <option key={status} value={status}>{status}</option>
+                    ))}
+                </select>
             </div>
 
             <Modal
@@ -182,11 +208,13 @@ function Obras()
                 </form>
             </Modal>
 
-            {obras.length === 0 ? (
-                <p className="lista-vazia">Nenhuma obra cadastrada ainda.</p>
+            {obrasFiltradas.length === 0 ? (
+                <p className="lista-vazia">
+                    {obras.length === 0 ? "Nenhuma obra cadastrada ainda." : "Nenhuma obra encontrada com esse filtro."}
+                </p>
             ) : (
                 <div className="obras-grid">
-                    {obras.map(obra => (
+                    {obrasFiltradas.map(obra => (
                         <div key={obra.id} className="obra-card-novo" onClick={() => navigate(`/obras/${obra.id}`)}>
                             <div className="obra-card-imagem">
                                 {obra.imagemUrl
@@ -197,14 +225,16 @@ function Obras()
                             <div className="obra-card-rodape">
                                 <span className="obra-card-nome">{obra.nome}</span>
                                 <span className={obterClasseBadgeStatus(obra.status)}>{obra.status}</span>
-                                <div className="obra-card-acoes">
-                                    <button onClick={(e) => abrirModalEdicao(obra, e)} className="botao-editar">
-                                        <Pencil size={15} />
-                                    </button>
-                                    <button onClick={(e) => handleDelete(obra.id!, e)} className="botao-excluir">
-                                        <Trash2 size={15} />
-                                    </button>
-                                </div>
+                                {admin && (
+                                    <div className="obra-card-acoes">
+                                        <button onClick={(e) => abrirModalEdicao(obra, e)} className="botao-editar">
+                                            <Pencil size={15} />
+                                        </button>
+                                        <button onClick={(e) => handleDelete(obra.id!, e)} className="botao-excluir">
+                                            <Trash2 size={15} />
+                                        </button>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     ))}

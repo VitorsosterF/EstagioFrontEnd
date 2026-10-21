@@ -6,6 +6,14 @@ import { Pencil, Trash2 } from "lucide-react"
 import "./Templates.css"
 
 const formVazio: Template = { titulo: "", tipo: "", corpo: "", padraoNotificacaoStatus: false }
+const VARIAVEIS_CONHECIDAS = ["nome_cliente", "endereco", "status", "obra"]
+
+function extrairPlaceholdersDesconhecidos(corpo: string): string[]
+{
+    const encontrados = corpo.match(/{(\w+)}/g) ?? []
+    const nomes = encontrados.map(p => p.slice(1, -1))
+    return [...new Set(nomes.filter(nome => !VARIAVEIS_CONHECIDAS.includes(nome)))]
+}
 
 function Templates()
 {
@@ -85,6 +93,8 @@ function Templates()
         return "badge-whatsapp"
     }
 
+    const placeholdersDesconhecidos = extrairPlaceholdersDesconhecidos(form.corpo)
+
     return (
         <div className="pagina">
             <div className="pagina-header">
@@ -129,6 +139,13 @@ function Templates()
                     {form.corpo && (
                         <p className="templates-dica">
                             Ex: "Olá {"{nome_cliente}"}, sua obra em {"{endereco}"} está {"{status}"}."
+                        </p>
+                    )}
+
+                    {placeholdersDesconhecidos.length > 0 && (
+                        <p className="templates-aviso">
+                            ⚠️ Variável desconhecida no corpo: {placeholdersDesconhecidos.join(", ")}.
+                            Ela vai aparecer como texto literal na mensagem enviada.
                         </p>
                     )}
 

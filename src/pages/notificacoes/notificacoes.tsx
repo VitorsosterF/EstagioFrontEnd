@@ -5,13 +5,28 @@ import type { Notificacao } from "../../types/notificacoes"
 import type { Obra } from "../../types/obras"
 import type { Template } from "../../types/templates"
 import Modal from "../../components/modal/modal"
-import { Check, Trash2 } from "lucide-react"
+import { Check, CheckCheck, Trash2 } from "lucide-react"
 import { obterMensagemErro } from "../../utils/erros"
 import "./notificacoes.css"
 
 function formatarData(iso: string)
 {
     return new Date(iso).toLocaleString("pt-BR")
+}
+
+// Monta a prévia da mensagem com as mesmas variáveis que o back resolve ao
+// gravar a notificação ({nome_cliente}, {endereco}, {status}, {obra}) — só
+// pra exibição no modal de envio manual, o envio em si não usa isso.
+function resolverVariaveis(corpo: string, obra?: Obra): string
+{
+    if (!obra || !obra.cliente) return corpo
+    const mapa: Record<string, string> = {
+        nome_cliente: `${obra.cliente.nome} ${obra.cliente.sobrenome}`,
+        endereco: `${obra.rua}, ${obra.numero}${obra.complemento ? ` - ${obra.complemento}` : ""}`,
+        status: obra.status,
+        obra: obra.nome,
+    }
+    return corpo.replace(/{(\w+)}/g, (original, chave: string) => mapa[chave] ?? original)
 }
 
 function Notificacoes()
@@ -82,6 +97,21 @@ function Notificacoes()
         }
     }
 
+    async function marcarTodasComoLidas()
+    {
+        try
+        {
+            await Promise.all(
+                notificacoes.filter(n => !n.lida).map(n => api.patch(`/notificacoes/${n.id}/lida`))
+            )
+            carregarNotificacoes()
+        }
+        catch (error)
+        {
+            alert(obterMensagemErro(error, "Erro ao marcar notificações como lidas."))
+        }
+    }
+
     async function handleDelete(id: number)
     {
         if (!confirm("Deseja excluir esta notificação?")) return
@@ -95,6 +125,10 @@ function Notificacoes()
             alert(obterMensagemErro(error, "Erro ao excluir notificação."))
         }
     }
+
+    const naoLidas = notificacoes.filter(n => !n.lida).length
+    const obraSelecionada = obras.find(o => o.id === Number(obraId))
+    const templateSelecionado = templates.find(t => t.id === Number(templateId))
 
     return (
         <div className="pagina">
@@ -122,6 +156,12 @@ function Notificacoes()
                 </div>
             )}
 
+            {!admin && naoLidas > 0 && (
+                <button className="notif-marcar-todas" onClick={marcarTodasComoLidas}>
+                    <CheckCheck size={15} /> Marcar todas como lidas
+                </button>
+            )}
+
             <Modal aberto={modalAberto} titulo="Enviar notificação" onFechar={() => setModalAberto(false)}>
                 <form onSubmit={handleEnviar} className="form">
                     <select value={obraId} onChange={e => setObraId(Number(e.target.value))} required className="input">
@@ -140,6 +180,23 @@ function Notificacoes()
                             </option>
                         ))}
                     </select>
+
+                    {obraSelecionada && (
+                        <p className="notif-info">
+                            Destinatário: <strong>{obraSelecionada.cliente ? `${obraSelecionada.cliente.nome} ${obraSelecionada.cliente.sobrenome}` : "—"}</strong> ·
+                            Status atual: <strong>{obraSelecionada.status}</strong>
+                        </p>
+                    )}
+
+                    {templateSelecionado && (
+                        <div className="notif-preview">
+                            <span className="detalhe-label">Prévia da mensagem</span>
+                            <p className="notif-preview-corpo">
+                                {resolverVariaveis(templateSelecionado.corpo, obraSelecionada)}
+                            </p>
+                        </div>
+                    )}
+
                     <div className="botoes">
                         <button type="submit" className="botao-primario" disabled={enviando}>
                             {enviando ? "Enviando..." : "Enviar"}

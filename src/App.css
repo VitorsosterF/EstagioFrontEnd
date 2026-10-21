@@ -48,6 +48,19 @@
     @apply flex items-center justify-between mb-6;
 }
 
+/* Barra de filtros (Obras, Usuários) */
+.filtros-barra {
+    @apply flex flex-wrap items-center gap-3 mb-6;
+}
+
+.filtro-busca {
+    @apply flex-1 min-w-[200px];
+}
+
+.filtro-select {
+    @apply w-48 flex-shrink-0;
+}
+
 .titulo {
     @apply text-2xl font-medium text-white mb-8;
 }

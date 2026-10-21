@@ -1,8 +1,11 @@
 import "./drawer.css"
+import { useEffect, useState } from "react"
 import { useNavigate, useLocation } from "react-router-dom"
 import { Home, LayoutDashboard, Building2, Users, FileText, Bell, LogOut, ChevronLeft, ChevronRight, ShieldCheck, User } from "lucide-react"
+import { api } from "../../services/api"
 import { obterPerfil } from "../../services/auth"
 import { ehPerfilAdmin } from "../../utils/perfil"
+import type { Notificacao } from "../../types/notificacoes"
 
 interface DrawerProps
 {
@@ -13,12 +16,12 @@ interface DrawerProps
 }
 
 const itensNav = [
-    { rota: "/inicio", label: "Início", Icone: Home },
-    { rota: "/dashboard", label: "Dashboard", Icone: LayoutDashboard },
-    { rota: "/obras", label: "Obras", Icone: Building2 },
-    { rota: "/usuarios", label: "Usuários", Icone: Users },
-    { rota: "/templates", label: "Templates", Icone: FileText },
-    { rota: "/notificacoes", label: "Notificações", Icone: Bell },
+    { rota: "/inicio", label: "Início", Icone: Home, admin: false },
+    { rota: "/dashboard", label: "Dashboard", Icone: LayoutDashboard, admin: false },
+    { rota: "/obras", label: "Obras", Icone: Building2, admin: false },
+    { rota: "/usuarios", label: "Usuários", Icone: Users, admin: true },
+    { rota: "/templates", label: "Templates", Icone: FileText, admin: true },
+    { rota: "/notificacoes", label: "Notificações", Icone: Bell, admin: false },
 ]
 
 function Drawer({ onSair, nomeUsuario, colapsado, aoAlternar }: DrawerProps)
@@ -27,6 +30,26 @@ function Drawer({ onSair, nomeUsuario, colapsado, aoAlternar }: DrawerProps)
     const location = useLocation()
     const perfil = obterPerfil()
     const admin = ehPerfilAdmin(perfil)
+    const [naoLidas, setNaoLidas] = useState(0)
+
+    useEffect(() =>
+    {
+        async function carregarNaoLidas()
+        {
+            try
+            {
+                const resposta = await api.get<Notificacao[]>(admin ? "/notificacoes" : "/notificacoes/minhas")
+                setNaoLidas(resposta.data.filter(n => !n.lida).length)
+            }
+            catch
+            {
+                setNaoLidas(0)
+            }
+        }
+        carregarNaoLidas()
+    }, [location.pathname])
+
+    const itensVisiveis = itensNav.filter(item => !item.admin || admin)
 
     return (
         <div className={`drawer ${colapsado ? "drawer-colapsada" : ""}`}>
@@ -43,7 +66,7 @@ function Drawer({ onSair, nomeUsuario, colapsado, aoAlternar }: DrawerProps)
             </div>
 
             <nav className="drawer-nav">
-                {itensNav.map(({ rota, label, Icone }) => (
+                {itensVisiveis.map(({ rota, label, Icone }) => (
                     <button
                         key={rota}
                         className={`drawer-link ${colapsado ? "drawer-link-colapsada" : ""} ${location.pathname === rota ? "drawer-link-ativo" : ""}`}
@@ -52,6 +75,9 @@ function Drawer({ onSair, nomeUsuario, colapsado, aoAlternar }: DrawerProps)
                     >
                         <Icone size={17} className="drawer-link-icone" />
                         {!colapsado && <span>{label}</span>}
+                        {rota === "/notificacoes" && naoLidas > 0 && !colapsado && (
+                            <span className="drawer-badge">{naoLidas}</span>
+                        )}
                     </button>
                 ))}
             </nav>
