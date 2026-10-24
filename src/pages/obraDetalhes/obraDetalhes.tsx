@@ -6,6 +6,7 @@ import Modal from "../../components/modal/modal"
 import "./obraDetalhes.css"
 import { Pencil, Trash2 } from "lucide-react"
 import { obterMensagemErro } from "../../utils/erros"
+import { validarCamposTexto } from "../../utils/validacao"
 import { ehPerfilAdmin } from "../../utils/perfil"
 import { obterPerfil } from "../../services/auth"
 
@@ -23,8 +24,10 @@ function ObraDetalhe()
 
     useEffect(() =>
     {
-        api.get(`/obras/${id}`).then(res => setObra(res.data))
-        api.get("/usuarios").then(res => setUsuarios(res.data.filter((u: { perfil: string }) => u.perfil === "Cliente")))
+        // Cliente que tentar abrir uma obra que não é dele recebe 403 do back —
+        // nesse caso volta pra listagem em vez de ficar travado em "Carregando...".
+        api.get(`/obras/${id}`).then(res => setObra(res.data)).catch(() => navigate("/obras"))
+        if (admin) api.get("/usuarios").then(res => setUsuarios(res.data.filter((u: { perfil: string }) => u.perfil === "Cliente")))
     }, [id])
 
     function abrirModalEdicao()
@@ -58,10 +61,17 @@ function ObraDetalhe()
     {
         e.preventDefault()
         if (!form) return
+        const dados = { ...form, nome: form.nome.trim(), rua: form.rua.trim(), numero: form.numero.trim(), complemento: form.complemento.trim(), descricao: form.descricao.trim() }
+        const erro = validarCamposTexto({ "Nome da obra": dados.nome, Rua: dados.rua })
+        if (erro)
+        {
+            alert(erro)
+            return
+        }
         try
         {
             const formData = new FormData()
-            formData.append("obra", JSON.stringify(form))
+            formData.append("obra", JSON.stringify(dados))
             if (imagem) formData.append("imagem", imagem)
             const res = await api.put(`/obras/${id}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" }

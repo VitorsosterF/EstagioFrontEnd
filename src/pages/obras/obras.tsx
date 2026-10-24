@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom"
 import { Pencil, Trash2 } from "lucide-react"
 import { obterClasseBadgeStatus, STATUS_OBRA } from "../../utils/statusObra"
 import { obterMensagemErro } from "../../utils/erros"
+import { validarCamposTexto } from "../../utils/validacao"
 import { ehPerfilAdmin } from "../../utils/perfil"
 import { obterPerfil } from "../../services/auth"
 
@@ -40,7 +41,9 @@ function Obras()
     useEffect(() =>
     {
         carregarObras()
-        carregarUsuarios()
+        // O select de cliente responsável só existe no modal do admin; o cliente
+        // nem pode chamar /usuarios (403).
+        if (admin) carregarUsuarios()
     }, [])
 
     function abrirModalCriacao()
@@ -86,8 +89,15 @@ function Obras()
         e.preventDefault()
         try 
         {
+            const dados = { ...form, nome: form.nome.trim(), rua: form.rua.trim(), numero: form.numero.trim(), complemento: form.complemento.trim(), descricao: form.descricao.trim() }
+            const erro = validarCamposTexto({ "Nome da obra": dados.nome, Rua: dados.rua })
+            if (erro)
+            {
+                alert(erro)
+                return
+            }
             const formData = new FormData()
-            formData.append("obra", JSON.stringify(form))
+            formData.append("obra", JSON.stringify(dados))
             if (imagem) formData.append("imagem", imagem)
 
             if (edicaoId)
@@ -162,7 +172,7 @@ function Obras()
                     <div className="form-grid">
                         <input placeholder="Nome da obra" value={form.nome} onChange={e => setForm({ ...form, nome: e.target.value })} required className="input" />
                         <input placeholder="Rua" value={form.rua} onChange={e => setForm({ ...form, rua: e.target.value })} required className="input" />
-                        <input placeholder="Número" type="number" value={form.numero} onChange={e => setForm({ ...form, numero: e.target.value })} required className="input" />
+                        <input placeholder="Número" value={form.numero} onChange={e => setForm({ ...form, numero: e.target.value })} required className="input" />
                         <input placeholder="Complemento" value={form.complemento} onChange={e => setForm({ ...form, complemento: e.target.value })} className="input" />
                         <select
                             value={form.clienteId}

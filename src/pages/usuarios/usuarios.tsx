@@ -6,9 +6,10 @@ import "./Usuarios.css"
 import { Pencil, Trash2, ShieldCheck, User } from "lucide-react"
 import { ehPerfilAdmin, obterClasseBadgePerfil } from "../../utils/perfil"
 import { obterMensagemErro } from "../../utils/erros"
+import { validarCamposTexto } from "../../utils/validacao"
 
 
-const formVazio: Usuario = { nome: "", sobrenome: "", email: "", senha: "", perfil: "" }
+const formVazio: Usuario = { nome: "", sobrenome: "", email: "", senha: "", perfil: "", telefone: "" }
 
 function Usuarios()
 {
@@ -54,15 +55,27 @@ function Usuarios()
     async function handleSubmit(e: React.FormEvent)
     {
         e.preventDefault()
+        const dados = { ...form, nome: form.nome.trim(), sobrenome: form.sobrenome.trim(), email: form.email.trim(), telefone: (form.telefone ?? "").trim() }
+        const erro = validarCamposTexto({ Nome: dados.nome, Sobrenome: dados.sobrenome })
+        if (erro)
+        {
+            alert(erro)
+            return
+        }
+        if (dados.perfil === "Cliente" && !dados.telefone)
+        {
+            alert("Informe o telefone do cliente — é usado para o envio de WhatsApp.")
+            return
+        }
         try
         {
             if (edicaoId)
             {
-                await api.put(`/usuarios/${edicaoId}`, form)
+                await api.put(`/usuarios/${edicaoId}`, dados)
             }
             else
             {
-                await api.post("/usuarios", form)
+                await api.post("/usuarios", dados)
             }
             fecharModal()
             carregarUsuarios()
@@ -131,10 +144,19 @@ function Usuarios()
                             className="input"
                         />
                         <input
+                            type="tel"
+                            placeholder={form.perfil === "Cliente" ? "Telefone (WhatsApp)" : "Telefone (WhatsApp) — opcional"}
+                            value={form.telefone ?? ""}
+                            onChange={e => setForm({ ...form, telefone: e.target.value })}
+                            required={form.perfil === "Cliente"}
+                            className="input"
+                        />
+                        <input
                             type="password"
-                            placeholder="Senha provisória"
+                            placeholder={edicaoId ? "Nova senha (deixe em branco para manter)" : "Senha provisória"}
                             value={form.senha}
                             onChange={e => setForm({ ...form, senha: e.target.value })}
+                            required={!edicaoId}
                             className="input"
                         />
                         <select
@@ -186,6 +208,7 @@ function Usuarios()
                             <div className="obra-info">
                                 <span className="obra-nome">{usuario.nome} {usuario.sobrenome}</span>
                                 <span className="obra-detalhe">{usuario.email}</span>
+                                {usuario.telefone && <span className="obra-detalhe">{usuario.telefone}</span>}
                             </div>
                             <div className="obra-acoes">
                                 <span className={`badge-perfil ${obterClasseBadgePerfil(usuario.perfil)}`}>

@@ -1,6 +1,7 @@
 import "./login.css"
 import { useState } from "react"
 import { login, salvarToken } from "../../services/auth"
+import { emailValido } from "../../utils/validacao"
 
 interface LoginProps
 {
@@ -16,9 +17,14 @@ function Login({ onLogin }: LoginProps)
 
     async function handleLogin() 
     {
-        if (!email || !senha) 
+        if (!email || !senha)
         {
             setErro("Preencha e-mail e senha.")
+            return
+        }
+        if (!emailValido(email))
+        {
+            setErro("Informe um e-mail válido.")
             return
         }
         setCarregando(true)

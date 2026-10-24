@@ -3,6 +3,7 @@ import { api } from "../../services/api"
 import type { Template } from "../../types/templates"
 import Modal from "../../components/modal/modal"
 import { Pencil, Trash2 } from "lucide-react"
+import { obterMensagemErro } from "../../utils/erros"
 import "./Templates.css"
 
 const formVazio: Template = { titulo: "", tipo: "", corpo: "", padraoNotificacaoStatus: false }
@@ -54,22 +55,23 @@ function Templates()
     async function handleSubmit(e: React.FormEvent)
     {
         e.preventDefault()
+        const dados = { ...form, titulo: form.titulo.trim(), corpo: form.corpo.trim() }
         try
         {
             if (edicaoId)
             {
-                await api.put(`/templates/${edicaoId}`, form)
+                await api.put(`/templates/${edicaoId}`, dados)
             }
             else
             {
-                await api.post("/templates", form)
+                await api.post("/templates", dados)
             }
             fecharModal()
             carregarTemplates()
         }
-        catch
+        catch (error)
         {
-            alert("Erro ao salvar template. Verifique os dados e tente novamente.")
+            alert(obterMensagemErro(error, "Erro ao salvar template. Verifique os dados e tente novamente."))
         }
     }
 
@@ -132,6 +134,7 @@ function Templates()
                         placeholder="Corpo da mensagem — use {variavel} para campos dinâmicos"
                         value={form.corpo}
                         onChange={e => setForm({ ...form, corpo: e.target.value })}
+                        required
                         rows={6}
                         style={{ backgroundColor: "#212529", border: "0.5px solid rgba(255,255,255,0.1)", borderRadius: "8px", padding: "10px 12px", fontSize: "14px", color: "white", width: "100%", resize: "none", outline: "none" }}
                     />

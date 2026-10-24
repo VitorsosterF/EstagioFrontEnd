@@ -5,8 +5,8 @@ import type { Obra } from "../../types/obras"
 import type { Usuario } from "../../types/usuarios"
 import { calcularMetricasObras, calcularMetricasUsuarios } from "../../utils/metricas"
 import { obterClasseBadgeStatus } from "../../utils/statusObra"
-import { obterClasseBadgePerfil } from "../../utils/perfil"
-import { obterNomeUsuario } from "../../services/auth"
+import { ehPerfilAdmin, obterClasseBadgePerfil } from "../../utils/perfil"
+import { obterNomeUsuario, obterPerfil } from "../../services/auth"
 import { ArrowRight } from "lucide-react"
 import "./inicio.css"
 
@@ -16,18 +16,16 @@ function Inicio()
     const [usuarios, setUsuarios] = useState<Usuario[]>([])
     const [carregando, setCarregando] = useState(true)
     const navigate = useNavigate()
+    const admin = ehPerfilAdmin(obterPerfil())
     const nomeUsuario = obterNomeUsuario()
     const primeiroNome = nomeUsuario.split(" ")[0] || "bem-vindo"
 
     useEffect(() =>
     {
-        Promise.all([api.get("/obras"), api.get("/usuarios")])
-            .then(([respostaObras, respostaUsuarios]) =>
-            {
-                setObras(respostaObras.data)
-                setUsuarios(respostaUsuarios.data)
-            })
-            .finally(() => setCarregando(false))
+        // Cliente só enxerga as próprias obras (o back escopa /obras) e não tem
+        // acesso a /usuarios — a seção de usuários recentes é exclusiva do admin.
+        api.get("/obras").then(res => setObras(res.data)).finally(() => setCarregando(false))
+        if (admin) api.get("/usuarios").then(res => setUsuarios(res.data))
     }, [])
 
     const metricasObras = calcularMetricasObras(obras)
@@ -61,10 +59,12 @@ function Inicio()
                             <span className="metric-card-label">Concluídas</span>
                             <span className="metric-card-valor">{metricasObras.percentualConcluidas}%</span>
                         </div>
-                        <div className="metric-card">
-                            <span className="metric-card-label">Usuários cadastrados</span>
-                            <span className="metric-card-valor">{metricasUsuarios.total}</span>
-                        </div>
+                        {admin && (
+                            <div className="metric-card">
+                                <span className="metric-card-label">Usuários cadastrados</span>
+                                <span className="metric-card-valor">{metricasUsuarios.total}</span>
+                            </div>
+                        )}
                     </div>
 
                     <div className="inicio-colunas">
@@ -89,28 +89,30 @@ function Inicio()
                             )}
                         </div>
 
-                        <div className="inicio-secao">
-                            <div className="inicio-secao-header">
-                                <h2 className="lista-titulo inicio-secao-titulo">Usuários recentes</h2>
-                                <button className="inicio-ver-tudo" onClick={() => navigate("/usuarios")}>
-                                    Ver todos <ArrowRight size={14} />
-                                </button>
-                            </div>
-                            {usuariosRecentes.length === 0 ? (
-                                <p className="lista-vazia">Nenhum usuário cadastrado ainda.</p>
-                            ) : (
-                                <div className="lista">
-                                    {usuariosRecentes.map(usuario => (
-                                        <div key={usuario.id} className="inicio-item" onClick={() => navigate("/usuarios")}>
-                                            <span className="inicio-item-titulo">{usuario.nome} {usuario.sobrenome}</span>
-                                            <span className={`badge-perfil ${obterClasseBadgePerfil(usuario.perfil)}`}>
-                                                {usuario.perfil || "Sem perfil"}
-                                            </span>
-                                        </div>
-                                    ))}
+                        {admin && (
+                            <div className="inicio-secao">
+                                <div className="inicio-secao-header">
+                                    <h2 className="lista-titulo inicio-secao-titulo">Usuários recentes</h2>
+                                    <button className="inicio-ver-tudo" onClick={() => navigate("/usuarios")}>
+                                        Ver todos <ArrowRight size={14} />
+                                    </button>
                                 </div>
-                            )}
-                        </div>
+                                {usuariosRecentes.length === 0 ? (
+                                    <p className="lista-vazia">Nenhum usuário cadastrado ainda.</p>
+                                ) : (
+                                    <div className="lista">
+                                        {usuariosRecentes.map(usuario => (
+                                            <div key={usuario.id} className="inicio-item" onClick={() => navigate("/usuarios")}>
+                                                <span className="inicio-item-titulo">{usuario.nome} {usuario.sobrenome}</span>
+                                                <span className={`badge-perfil ${obterClasseBadgePerfil(usuario.perfil)}`}>
+                                                    {usuario.perfil || "Sem perfil"}
+                                                </span>
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        )}
                     </div>
                 </>
             )}

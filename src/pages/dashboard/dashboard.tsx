@@ -5,24 +5,24 @@ import type { Obra } from "../../types/obras"
 import type { Usuario } from "../../types/usuarios"
 import { calcularMetricasObras, calcularMetricasUsuarios } from "../../utils/metricas"
 import { STATUS_OBRA, obterChaveStatus, obterClasseBadgeStatus } from "../../utils/statusObra"
+import { ehPerfilAdmin } from "../../utils/perfil"
+import { obterPerfil } from "../../services/auth"
 import { Download } from "lucide-react"
 import "./dashboard.css"
 
 function Dashboard()
 {
+    const admin = ehPerfilAdmin(obterPerfil())
     const [obras, setObras] = useState<Obra[]>([])
     const [usuarios, setUsuarios] = useState<Usuario[]>([])
     const [carregando, setCarregando] = useState(true)
 
     useEffect(() =>
     {
-        Promise.all([api.get("/obras"), api.get("/usuarios")])
-            .then(([respostaObras, respostaUsuarios]) =>
-            {
-                setObras(respostaObras.data)
-                setUsuarios(respostaUsuarios.data)
-            })
-            .finally(() => setCarregando(false))
+        // O back já escopa /obras às obras do cliente; métricas de usuário são só
+        // do admin (cliente nem pode chamar /usuarios).
+        api.get("/obras").then(res => setObras(res.data)).finally(() => setCarregando(false))
+        if (admin) api.get("/usuarios").then(res => setUsuarios(res.data))
     }, [])
 
     const metricasObras = calcularMetricasObras(obras)
@@ -35,9 +35,11 @@ function Dashboard()
             { Métrica: "Total de obras", Valor: metricasObras.total },
             ...STATUS_OBRA.map(status => ({ Métrica: `Obras — ${status}`, Valor: metricasObras.porStatus[status] ?? 0 })),
             { Métrica: "Obras concluídas (%)", Valor: `${metricasObras.percentualConcluidas}%` },
-            { Métrica: "Total de usuários", Valor: metricasUsuarios.total },
-            { Métrica: "Usuários — Admin", Valor: metricasUsuarios.admins },
-            { Métrica: "Usuários — Cliente", Valor: metricasUsuarios.clientes },
+            ...(admin ? [
+                { Métrica: "Total de usuários", Valor: metricasUsuarios.total },
+                { Métrica: "Usuários — Admin", Valor: metricasUsuarios.admins },
+                { Métrica: "Usuários — Cliente", Valor: metricasUsuarios.clientes },
+            ] : []),
         ]
 
         const obrasDetalhadas = obras.map(obra => ({
@@ -87,10 +89,12 @@ function Dashboard()
                             <span className="metric-card-label">Concluídas</span>
                             <span className="metric-card-valor">{metricasObras.percentualConcluidas}%</span>
                         </div>
-                        <div className="metric-card">
-                            <span className="metric-card-label">Total de usuários</span>
-                            <span className="metric-card-valor">{metricasUsuarios.total}</span>
-                        </div>
+                        {admin && (
+                            <div className="metric-card">
+                                <span className="metric-card-label">Total de usuários</span>
+                                <span className="metric-card-valor">{metricasUsuarios.total}</span>
+                            </div>
+                        )}
                     </div>
 
                     <h2 className="lista-titulo">Distribuição por status</h2>
@@ -121,17 +125,21 @@ function Dashboard()
                         </div>
                     )}
 
-                    <h2 className="lista-titulo">Usuários por perfil</h2>
-                    <div className="metric-grid">
-                        <div className="metric-card">
-                            <span className="metric-card-label">Admin</span>
-                            <span className="metric-card-valor">{metricasUsuarios.admins}</span>
-                        </div>
-                        <div className="metric-card">
-                            <span className="metric-card-label">Cliente</span>
-                            <span className="metric-card-valor">{metricasUsuarios.clientes}</span>
-                        </div>
-                    </div>
+                    {admin && (
+                        <>
+                            <h2 className="lista-titulo">Usuários por perfil</h2>
+                            <div className="metric-grid">
+                                <div className="metric-card">
+                                    <span className="metric-card-label">Admin</span>
+                                    <span className="metric-card-valor">{metricasUsuarios.admins}</span>
+                                </div>
+                                <div className="metric-card">
+                                    <span className="metric-card-label">Cliente</span>
+                                    <span className="metric-card-valor">{metricasUsuarios.clientes}</span>
+                                </div>
+                            </div>
+                        </>
+                    )}
                 </>
             )}
         </div>

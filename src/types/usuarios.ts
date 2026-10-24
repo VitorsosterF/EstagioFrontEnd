@@ -6,6 +6,7 @@ export interface Usuario
     email: string
     senha: string
     perfil: string
+    telefone?: string
 }
 
 // Formato reduzido devolvido pelo back quando o usuário aparece embutido em
